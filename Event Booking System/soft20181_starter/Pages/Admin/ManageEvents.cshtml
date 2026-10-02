@@ -1,0 +1,32 @@
+@page
+@model soft20181_starter.Pages.Admin.ManageEventsModel
+@{
+    ViewData["Title"] = "Manage Events";
+}
+
+<h2>Admin Panel: Manage Events</h2>
+
+<a class="btn btn-success mb-3" asp-page="/Events/Create">+ Add Event</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ev in Model.Events)
+        {
+            <tr>
+                <td>@ev.Title</td>
+                <td>@ev.Date.ToString("f")</td>
+                <td>
+                    <a asp-page="/Events/Edit" asp-route-id="@ev.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-page="/Events/Delete" asp-route-id="@ev.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

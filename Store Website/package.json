@@ -1,0 +1,25 @@
+{
+  "name": "incikuyumculuk",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ulas27/InciKuyumculuk.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ulas27/InciKuyumculuk/issues"
+  },
+  "homepage": "https://github.com/ulas27/InciKuyumculuk#readme"
+}

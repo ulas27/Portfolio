@@ -1,0 +1,101 @@
+:root {
+    --primary-color: #8f5d9e;
+    --secondary-color: black;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+html {
+    font-family: "Poppins", sans-serif !important;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+    padding: 0;
+}
+
+body {
+    font-family: "Poppins", sans-serif !important;
+}
+
+.event-filter {
+    background-color: #eaeaea;
+}
+
+.card {
+    max-width: 350px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card .position-absolute i {
+    color: #b44e46;
+    font-size: 1.2rem;
+}
+
+.card .btn {
+    background-color: #c6a662;
+    border: none;
+}
+
+.card .btn:hover {
+    background-color: #b4a14c;
+}
+
+.card .card-body h5 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    font-size: 0.75rem;
+}
+
+.card-body button {
+    font-size: 0.8rem !important;
+}
+
+.car-event {
+    display: block;
+    background: #fff;
+    font-weight: 500;
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);
+    -webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);
+}
+
+.event-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+
+.event-card img {
+    transition: transform 0.3s ease;
+}
+
+
+.event-card:hover img {
+    transform: scale(1.1);
+}
+
+
+.event-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}

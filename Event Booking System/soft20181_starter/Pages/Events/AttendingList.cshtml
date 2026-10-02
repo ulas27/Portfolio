@@ -1,0 +1,25 @@
+@page
+@model soft20181_starter.Pages.Events.AttendingListModel
+@{
+    ViewData["Title"] = "Your Attending List";
+}
+
+<h2>Your Attending Events</h2>
+
+@if (Model.AttendingEvents == null || Model.AttendingEvents.Count == 0)
+{
+    <p>You have not registered for any events yet.</p>
+}
+else
+{
+    <ul class="list-group mb-3">
+        @foreach (var item in Model.AttendingEvents)
+        {
+            <li class="list-group-item">
+                <strong>@item.Title</strong> – @item.Date.ToString("f")
+            </li>
+        }
+    </ul>
+
+    <a asp-page="/Ticket" class="btn btn-primary">Generate Ticket</a>
+}

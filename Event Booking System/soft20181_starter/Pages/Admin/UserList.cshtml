@@ -1,0 +1,38 @@
+@page
+@model soft20181_starter.Pages.Admin.UserListModel
+@using Microsoft.AspNetCore.Identity
+@using soft20181_starter.Models
+@{
+    ViewData["Title"] = "Kullanıcı Listesi";
+}
+
+<h2>Kayıtlı Kullanıcılar</h2>
+
+@if (Model.Users.Count == 0)
+{
+    <p>Henüz kayıtlı kullanıcı yok.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Kullanıcı Adı</th>
+                <th>Roller</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.UserName</td>
+                    <td>
+                        @string.Join(", ", await Model.UserManager.GetRolesAsync(user))
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

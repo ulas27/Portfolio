@@ -1,0 +1,43 @@
+﻿@page
+@model soft20181_starter.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<h2>Contact Us</h2>
+
+<p>If you have any questions or suggestions, please fill in the form below:</p>
+
+<form method="post" class="mb-4">
+    <div class="form-group">
+        <label>Name</label>
+        <input asp-for="ContactInfo.Name" class="form-control" />
+        <span asp-validation-for="ContactInfo.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input asp-for="ContactInfo.Email" class="form-control" />
+        <span asp-validation-for="ContactInfo.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Phone</label>
+        <input asp-for="ContactInfo.Phone" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Message</label>
+        <textarea asp-for="ContactInfo.Message" class="form-control"></textarea>
+        <span asp-validation-for="ContactInfo.Message" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Send</button>
+</form>
+
+@if (Model.Sent)
+{
+    <div class="alert alert-success">
+        Your message has been sent. Thank you!
+    </div>
+}

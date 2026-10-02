@@ -1,0 +1,91 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isValidWarning() {
+      return request.resource.data.keys().hasAll([
+        'type', 'location', 'description', 'createdBy', 
+        'createdAt', 'upvotes', 'downvotes', 'isActive'
+      ]);
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Anyone can read user profiles
+      allow read: if true;
+      
+      // Only the user can write their own profile
+      allow write: if isOwner(userId);
+    }
+    
+    // Warnings collection
+    match /warnings/{warningId} {
+      // Anyone can read warnings
+      allow read: if true;
+      
+      // Only authenticated users can create warnings
+      allow create: if isSignedIn() 
+                    && request.resource.data.createdBy == request.auth.uid
+                    && request.resource.data.isActive == true
+                    && request.resource.data.upvotes == 0
+                    && request.resource.data.downvotes == 0
+                    && isValidWarning();
+      
+      // Authenticated users can update (for upvotes/downvotes)
+      // But cannot change certain fields
+      allow update: if isSignedIn()
+                    && request.resource.data.createdBy == resource.data.createdBy
+                    && request.resource.data.type == resource.data.type
+                    && request.resource.data.location == resource.data.location
+                    && request.resource.data.createdAt == resource.data.createdAt;
+      
+      // Only the creator can delete
+      allow delete: if isSignedIn() 
+                    && resource.data.createdBy == request.auth.uid;
+      
+      // Votes subcollection
+      match /votes/{voteId} {
+        // Anyone can read votes
+        allow read: if true;
+        
+        // Only authenticated users can write votes
+        // Vote ID must be the user's ID (one vote per user)
+        allow write: if isSignedIn() 
+                     && voteId == request.auth.uid;
+      }
+    }
+    
+    // Routes collection (optional - for saved routes)
+    match /routes/{routeId} {
+      // Only authenticated users can read their own routes
+      allow read: if isSignedIn();
+      
+      // Only authenticated users can create routes
+      allow create: if isSignedIn() 
+                    && request.resource.data.userId == request.auth.uid;
+      
+      // Only the owner can update
+      allow update: if isSignedIn() 
+                    && resource.data.userId == request.auth.uid;
+      
+      // Only the owner can delete
+      allow delete: if isSignedIn() 
+                    && resource.data.userId == request.auth.uid;
+    }
+    
+    // User statistics (optional)
+    match /statistics/{userId} {
+      allow read: if true;
+      allow write: if isOwner(userId);
+    }
+  }
+}

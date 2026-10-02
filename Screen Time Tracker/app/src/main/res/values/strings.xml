@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">MAP_ST</string>
+    <string name="nav_drawer_title">Screen time</string>
+    <string name="nav_drawer_subtitle">Overview · Apps · History</string>
+    <string name="nav_open">Open menu</string>
+    <string name="nav_close">Close menu</string>
+    <string name="tab_dashboard">Overview</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_history">Journal</string>
+    <string name="app_detail_title">App detail</string>
+    <string name="today_screen_time_fmt">Today: %1$s</string>
+    <string name="usage_access_needed_short">Turn on usage access in Settings to see numbers.</string>
+    <string name="last_7_days_label">Last 7 days</string>
+    <string name="daily_goal_label">Daily limit (minutes)</string>
+    <string name="daily_goal_hint">0 = off</string>
+    <string name="save_goal">Apply</string>
+    <string name="export_csv">Export CSV</string>
+    <string name="share_csv_chooser">Share CSV</string>
+    <string name="toast_goal_saved">Saved.</string>
+    <string name="toast_export_empty">Nothing to export yet.</string>
+    <string name="toast_export_failed">Could not export.</string>
+    <string name="dashboard_goal_off">No daily limit set — open Journal to add one.</string>
+    <string name="dashboard_goal_set">Limit: %1$d min / day (Journal)</string>
+    <string name="notif_channel_name">Screen time</string>
+    <string name="notif_goal_title">Daily limit</string>
+    <string name="notif_goal_text">You passed your %1$d minute limit today.</string>
+    <string name="history_info_default">Last 7 days on this device</string>
+    <string name="history_empty">No rows yet. Refresh Overview once.</string>
+
+    <string name="dash_eyebrow">Today</string>
+    <string name="dash_section_time">Screen time</string>
+    <string name="dash_section_pickups">App opens</string>
+    <string name="dash_status_need_access">Usage access is off — enable it to read totals.</string>
+    <string name="dash_status_ok">Data source: Android usage stats</string>
+    <string name="dash_btn_access">Open usage settings</string>
+    <string name="dash_btn_refresh">Refresh totals</string>
+
+    <string name="apps_eyebrow">Ranking</string>
+    <string name="apps_title">Heaviest apps today</string>
+    <string name="apps_btn_access">Open usage settings</string>
+    <string name="apps_btn_refresh">Reload list</string>
+    <string name="apps_status_need">Usage access is off — allow it to see the ranking.</string>
+    <string name="apps_status_ok">Today, by time.</string>
+
+    <string name="history_eyebrow">Goals &amp; export</string>
+</resources>

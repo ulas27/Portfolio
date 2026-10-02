@@ -1,0 +1,74 @@
+@page
+@model soft20181_starter.Pages.Events.IndexModel
+@{
+    ViewData["Title"] = "Events";
+}
+
+<link rel="stylesheet" href="~/style.css" />
+
+<section class="category-banner text-center mt-4"
+         style="background-image: url(/home-banner.jpg);">
+    <div class="container py-5 mt-5">
+        <h1 class="fs-1 fw-bold text-light">Discover Car Events</h1>
+        <div class="col-sm-8 offset-sm-2">
+            <form method="get" class="d-flex gap-2 justify-content-center mt-3">
+                <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control w-25" placeholder="Search events..." />
+                <select name="SelectedCategory" class="form-select w-25">
+                    <option value="">All Categories</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <option value="@cat" selected="@(Model.SelectedCategory == cat)">
+                            @cat
+                        </option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="bg-dark py-2 text-center text-light">
+        <h5>Filtered Events</h5>
+    </div>
+    <div class="container mt-5">
+        <div id="event-container" class="row event-list search-list all">
+            @if (Model.EventList != null && Model.EventList.Any())
+            {
+                foreach (var evt in Model.EventList)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-6 event-item-block">
+                        <div class="card shadow-sm border-0 rounded">
+                            <div class="position-relative">
+                                <img src="@(!string.IsNullOrEmpty(evt.ImageUrl) ? evt.ImageUrl : "/default-event.jpg")" 
+                                     class="card-img-top rounded-top" alt="@evt.Title" />
+                                <div class="position-absolute top-0 end-0 p-2 bg-light rounded-circle m-2">
+                                    <i class="bi bi-heart"></i>
+                                </div>
+                                <div class="position-absolute bottom-0 start-0 bg-warning text-white px-3 py-1 rounded-end">
+                                    <span class="fw-bold">@evt.Date.ToString("MMM dd")</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title fw-smibold fs-6">@evt.Title</h5>
+                                <p class="card-text text-muted mb-2">@evt.Date.ToString("dddd, dd MMM yyyy")</p>
+                                <p class="card-text">@evt.Location</p>
+                                <hr />
+
+                                <!-- ✅ Razor Pages uyumlu yönlendirme -->
+                                <a asp-page="/Events/Details" asp-route-id="@evt.Id" class="btn btn-warning text-uppercase w-100">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">No events found matching your search.</p>
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,50 @@
+﻿@page
+@model soft20181_starter.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/style.css" />
+
+<section class="category-banner text-center mt-4"
+         style="background-image: url('/home-banner.jpg'); background-size: cover; background-position: center;">
+    <div class="container py-5 mt-5">
+        <h1 class="fs-1 fw-bold text-light">Discover Car Events</h1>
+        <p class="lead text-light">Find, explore and attend amazing automotive experiences near you.</p>
+        <div class="col-sm-8 offset-sm-2 mt-4">
+            <a asp-page="/Events/Index" class="btn btn-lg btn-warning fw-bold">🚗 View Events</a>
+        </div>
+    </div>
+</section>
+
+<section class="event-list mt-5">
+    <div class="bg-dark py-2 text-center text-light">
+        <h5>Featured Events</h5>
+    </div>
+    <div class="container mt-4">
+        <div class="row">
+            @if (Model.RecentEvents != null && Model.RecentEvents.Any())
+            {
+                foreach (var evt in Model.RecentEvents)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            <img src="@evt.ThumbnailImageUrl" class="card-img-top" alt="@evt.Title" />
+                            <div class="card-body">
+                                <h5 class="card-title">@evt.Title</h5>
+                                <p class="card-text">@evt.Location</p>
+                                <p class="card-text"><small class="text-muted">@evt.Date.ToString("dddd, dd MMM yyyy")</small></p>
+                                <a asp-page="/Events/Details" asp-route-id="@evt.Id" class="btn btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">No featured events available.</p>
+            }
+        </div>
+    </div>
+</section>

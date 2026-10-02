@@ -1,0 +1,40 @@
+@page
+@model soft20181_starter.Pages.TicketModel
+@{
+    ViewData["Title"] = "Your Ticket";
+}
+
+<link rel="stylesheet" href="~/style.css" />
+
+<div class="container my-5">
+    <div class="card p-4 shadow-sm">
+        <h2 class="text-center mb-4">🎟️ Your Event Ticket</h2>
+
+        <p><strong>Name:</strong> @Model.UserName</p>
+
+        <h4 class="mt-4">Attending Events:</h4>
+        @if (Model.AttendingEvents != null && Model.AttendingEvents.Any())
+        {
+            <ul class="list-group">
+                @foreach (var item in Model.AttendingEvents)
+                {
+                    <li class="list-group-item">
+                        <strong>@item.Title</strong><br />
+                        <span>@item.Date.ToString("f")</span><br />
+                        <em>@item.Location</em>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">You have not registered for any events.</p>
+        }
+
+        <div class="text-center mt-4">
+            <button onclick="window.print()" class="btn btn-outline-primary">
+                🖨️ Print Ticket
+            </button>
+        </div>
+    </div>
+</div>

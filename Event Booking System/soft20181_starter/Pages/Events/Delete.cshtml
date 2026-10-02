@@ -1,0 +1,21 @@
+@page "{id:int}"
+@model soft20181_starter.Pages.Events.DeleteModel
+@{
+    ViewData["Title"] = "Delete Event";
+}
+
+<h1>Delete Event</h1>
+
+<h3>Are you sure you want to delete this event?</h3>
+<div>
+    <h4>@Model.Event.Title</h4>
+    <p>@Model.Event.Description</p>
+    <p>@Model.Event.Location</p>
+    <p>@Model.Event.Date.ToString("g")</p>
+    <p>Capacity: @Model.Event.Capacity</p>
+</div>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>

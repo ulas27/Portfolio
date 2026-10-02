@@ -1,0 +1,77 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isValidImageSize(maxSizeMB) {
+      return request.resource.size < maxSizeMB * 1024 * 1024;
+    }
+    
+    // Warning images
+    match /warnings/{userId}/{warningId}/{fileName} {
+      // Anyone can read warning images
+      allow read: if true;
+      
+      // Only the owner can upload warning images
+      allow write: if isOwner(userId)
+                   && isImage()
+                   && isValidImageSize(5); // 5MB max
+      
+      // Only the owner can delete
+      allow delete: if isOwner(userId);
+    }
+    
+    // User avatars
+    match /users/{userId}/avatar/{fileName} {
+      // Anyone can read user avatars
+      allow read: if true;
+      
+      // Only the owner can upload their avatar
+      allow write: if isOwner(userId)
+                   && isImage()
+                   && isValidImageSize(2); // 2MB max
+      
+      // Only the owner can delete
+      allow delete: if isOwner(userId);
+    }
+    
+    // Route images (optional - for route screenshots)
+    match /routes/{userId}/{routeId}/{fileName} {
+      // Anyone can read route images
+      allow read: if true;
+      
+      // Only the owner can upload route images
+      allow write: if isOwner(userId)
+                   && isImage()
+                   && isValidImageSize(3); // 3MB max
+      
+      // Only the owner can delete
+      allow delete: if isOwner(userId);
+    }
+    
+    // Temporary uploads (for processing)
+    match /temp/{userId}/{fileName} {
+      // Only the owner can read
+      allow read: if isOwner(userId);
+      
+      // Only the owner can write
+      allow write: if isOwner(userId)
+                   && isImage()
+                   && isValidImageSize(10); // 10MB max for temp
+      
+      // Auto-delete after 24 hours (implement via Cloud Function)
+    }
+  }
+}

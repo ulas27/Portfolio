@@ -1,0 +1,33 @@
+# TirNav Project Rules
+
+## Coding Standards
+- Always use TypeScript with strict mode
+- Follow functional programming principles
+- Use hooks instead of class components
+- Implement proper error handling with try-catch
+- Add JSDoc comments for complex functions
+
+## File Structure
+- One component per file
+- Index.ts for barrel exports
+- Separate styles into styles.ts
+- Types in types.ts or separate types folder
+
+## Performance
+- Use React.memo for expensive components
+- Implement useMemo and useCallback where needed
+- Optimize FlatList with proper props
+- Lazy load heavy components
+
+## Naming Conventions
+- Components: PascalCase
+- Functions: camelCase starting with verb
+- Constants: UPPER_SNAKE_CASE
+- Booleans: is/has/should prefix
+
+## Code Quality
+- No console.logs in production
+- No inline styles
+- No any type in TypeScript
+- No unused imports
+- Meaningful variable names

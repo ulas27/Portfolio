@@ -1,0 +1,72 @@
+@page "{id:int}"
+@model soft20181_starter.Pages.Events.DetailsModel
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<link rel="stylesheet" href="~/style.css" />
+
+@if (Model.Event == null)
+{
+    <p class="text-danger">Event not found.</p>
+}
+else
+{
+    <div class="container my-5">
+        <h2>@Model.Event.Title</h2>
+
+        <div class="mb-3">
+            <strong>Description:</strong>
+            <p>@Model.Event.Description</p>
+        </div>
+
+        <div class="mb-3">
+            <strong>Location:</strong> @Model.Event.Location
+        </div>
+
+        <div class="mb-3">
+            <strong>Date:</strong> @Model.Event.Date.ToString("f")
+        </div>
+
+        <div class="mb-3">
+            <strong>Capacity:</strong> @Model.Event.Capacity people
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Event.ThumbnailImageUrl))
+        {
+            <div class="mb-3">
+                <img src="@Model.Event.ThumbnailImageUrl" alt="Thumbnail" class="img-thumbnail" style="max-width: 200px;" />
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Event.ImageUrl1))
+        {
+            <div class="mb-3">
+                <img src="@Model.Event.ImageUrl1" alt="Image 1" class="img-fluid" />
+                <p class="text-muted">@Model.Event.ImageCaption1</p>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Event.ImageUrl2))
+        {
+            <div class="mb-3">
+                <img src="@Model.Event.ImageUrl2" alt="Image 2" class="img-fluid" />
+                <p class="text-muted">@Model.Event.ImageCaption2</p>
+            </div>
+        }
+
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <form method="post" asp-page-handler="Attend">
+                <input type="hidden" name="id" value="@Model.Event.Id" />
+                <button type="submit" class="btn btn-success mt-3">Attend This Event</button>
+            </form>
+        }
+        else
+        {
+            <p class="text-danger">You must <a asp-page="/Account/Login">log in</a> to attend this event.</p>
+        }
+
+        <a asp-page="/Events/Index" class="btn btn-secondary mt-3">← Back to Events</a>
+    </div>
+}
