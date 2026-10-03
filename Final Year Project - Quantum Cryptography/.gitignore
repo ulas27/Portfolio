@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Outputs (generated)
+outputs/**/*.png
+outputs/**/*.json
+outputs/**/__pycache__/
+
+# Test cache
+.pytest_cache/
