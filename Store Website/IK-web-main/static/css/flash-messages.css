@@ -1,0 +1,302 @@
+/* Flash Messages - Popup Design */
+#flash-popup-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+/* Flash Popup Styles */
+.flash-popup {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    margin-bottom: 1rem;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: auto;
+    border-left: 4px solid #ddd;
+    backdrop-filter: blur(10px);
+    min-width: 320px;
+}
+
+.flash-popup.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.flash-popup.hide {
+    transform: translateX(400px);
+    opacity: 0;
+}
+
+.flash-popup-content {
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    position: relative;
+}
+
+.flash-popup-icon {
+    font-size: 1.5rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.flash-popup-message {
+    flex: 1;
+}
+
+.flash-popup-message strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.flash-popup-message p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #666;
+}
+
+.flash-popup-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flash-popup-close:hover {
+    background: #f5f5f5;
+    color: #333;
+    transform: scale(1.1);
+}
+
+/* Category Colors */
+.flash-popup-success {
+    border-left-color: #28a745;
+}
+
+.flash-popup-success .flash-popup-icon {
+    color: #28a745;
+}
+
+.flash-popup-error {
+    border-left-color: #dc3545;
+}
+
+.flash-popup-error .flash-popup-icon {
+    color: #dc3545;
+}
+
+.flash-popup-warning {
+    border-left-color: #ffc107;
+}
+
+.flash-popup-warning .flash-popup-icon {
+    color: #ffc107;
+}
+
+.flash-popup-info {
+    border-left-color: #17a2b8;
+}
+
+.flash-popup-info .flash-popup-icon {
+    color: #17a2b8;
+}
+
+.alert {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-left: 4px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    color: white;
+}
+
+.alert.alert-info {
+    background: var(--primary-color);
+    color: white;
+}
+
+.alert.alert-warning {
+    background: #f39c12;
+    color: white;
+}
+
+.alert.alert-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.alert.alert-success {
+    background: var(--primary-color);
+    color: white;
+}
+
+.alert.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.alert-success {
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, #d4edda, #ffffff);
+}
+
+.alert-danger {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #f8d7da, #ffffff);
+}
+
+.alert-info {
+    border-left-color: #17a2b8;
+    background: linear-gradient(135deg, #d1ecf1, #ffffff);
+}
+
+.alert-warning {
+    border-left-color: #ffc107;
+    background: linear-gradient(135deg, #fff3cd, #ffffff);
+}
+
+.alert span {
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.alert-close:hover {
+    background: var(--bg-light);
+    color: var(--text-color);
+    transform: scale(1.1);
+}
+
+/* Auto-hide animation */
+.alert.auto-hide {
+    animation: slideOut 0.4s ease-in-out 3s forwards;
+}
+
+@keyframes slideOut {
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+/* Success animation */
+.alert-success {
+    animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #flash-popup-container {
+        top: 15px;
+        right: 15px;
+        left: 15px;
+        max-width: none;
+    }
+    
+    .flash-popup {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .flash-popup-content {
+        padding: 1rem;
+    }
+    
+    .flash-popup-message strong {
+        font-size: 0.9rem;
+    }
+    
+    .flash-popup-message p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Dark mode */
+[data-theme="dark"] .alert {
+    background: var(--bg-light);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .alert-success {
+    background: linear-gradient(135deg, #1e3a1e, var(--bg-light));
+    border-left-color: #28a745;
+}
+
+[data-theme="dark"] .alert-danger {
+    background: linear-gradient(135deg, #3a1e1e, var(--bg-light));
+    border-left-color: #dc3545;
+}
+
+[data-theme="dark"] .alert-info {
+    background: linear-gradient(135deg, #1e3a3a, var(--bg-light));
+    border-left-color: #17a2b8;
+}
+
+[data-theme="dark"] .alert-warning {
+    background: linear-gradient(135deg, #3a3a1e, var(--bg-light));
+    border-left-color: #ffc107;
+}

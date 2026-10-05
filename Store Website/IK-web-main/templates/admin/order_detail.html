@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Sipariş #{{ order.id }} - Admin{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{{ url_for('admin.orders') }}" class="btn btn-link">← Tüm Siparişler</a>
+  <h1 class="mb-3">Sipariş #{{ order.id }}</h1>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Sipariş Bilgileri</div>
+        <div class="card-body">
+          <p><strong>Toplam:</strong> {{ '%.2f'|format(order.total_amount or 0) }} TL</p>
+          <p><strong>Durum:</strong> <span class="badge bg-info">{{ order.status }}</span></p>
+          <p><strong>Ödeme:</strong> <span class="badge bg-{{ 'success' if order.payment_status=='paid' else 'secondary' }}">{{ order.payment_status }}</span></p>
+          <p><strong>Tarih:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M') if order.created_at else '' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Durum Güncelle</div>
+        <div class="card-body">
+          <form action="{{ url_for('admin.update_order_status', order_id=order.id) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="mb-3">
+              <label class="form-label">Durum</label>
+              <select class="form-select" name="status">
+                <option value="pending" {% if order.status=='pending' %}selected{% endif %}>Beklemede</option>
+                <option value="confirmed" {% if order.status=='confirmed' %}selected{% endif %}>Onaylandı</option>
+                <option value="processing" {% if order.status=='processing' %}selected{% endif %}>Hazırlanıyor</option>
+                <option value="shipped" {% if order.status=='shipped' %}selected{% endif %}>Kargoya Verildi</option>
+                <option value="delivered" {% if order.status=='delivered' %}selected{% endif %}>Teslim Edildi</option>
+                <option value="cancelled" {% if order.status=='cancelled' %}selected{% endif %}>İptal Edildi</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Kargo Firması</label>
+              <select class="form-select" name="shipping_company">
+                <option value="">Kargo Firması Seçin</option>
+                <option value="Aras Kargo" {% if order.shipping_company=='Aras Kargo' %}selected{% endif %}>Aras Kargo</option>
+                <option value="MNG Kargo" {% if order.shipping_company=='MNG Kargo' %}selected{% endif %}>MNG Kargo</option>
+                <option value="Yurtiçi Kargo" {% if order.shipping_company=='Yurtiçi Kargo' %}selected{% endif %}>Yurtiçi Kargo</option>
+                <option value="PTT Kargo" {% if order.shipping_company=='PTT Kargo' %}selected{% endif %}>PTT Kargo</option>
+                <option value="Sürat Kargo" {% if order.shipping_company=='Sürat Kargo' %}selected{% endif %}>Sürat Kargo</option>
+                <option value="UPS" {% if order.shipping_company=='UPS' %}selected{% endif %}>UPS</option>
+                <option value="DHL" {% if order.shipping_company=='DHL' %}selected{% endif %}>DHL</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Kargo Takip No</label>
+              <input class="form-control" name="tracking_number" value="{{ order.tracking_number or '' }}" placeholder="Kargo takip numarasını girin" />
+            </div>
+            <button class="btn btn-primary" type="submit">Kaydet</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-3">
+    <div class="card-header">Ürünler</div>
+    <div class="card-body table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Ürün</th>
+            <th>Adet</th>
+            <th>Birim Fiyat</th>
+            <th>Toplam</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order.items %}
+          <tr>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ '%.2f'|format(item.price or 0) }} TL</td>
+            <td>{{ '%.2f'|format(item.total or 0) }} TL</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

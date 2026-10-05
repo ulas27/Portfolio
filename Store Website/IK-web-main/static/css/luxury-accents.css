@@ -1,0 +1,155 @@
+/* Minimal Luxury Accents - Jewelry Theme */
+
+/* Gold accent for special elements */
+.luxury-gold {
+    color: var(--gold-accent);
+}
+
+.luxury-gold-bg {
+    background: linear-gradient(135deg, var(--gold-accent), #b8941f);
+    color: white;
+}
+
+/* Silver accent for secondary elements */
+.luxury-silver {
+    color: var(--silver-accent);
+}
+
+.luxury-silver-bg {
+    background: linear-gradient(135deg, var(--silver-accent), #a8a8a8);
+    color: white;
+}
+
+/* Diamond accent for highlights */
+.luxury-diamond {
+    color: var(--diamond-accent);
+}
+
+.luxury-diamond-bg {
+    background: linear-gradient(135deg, var(--diamond-accent), #87ceeb);
+    color: white;
+}
+
+/* Subtle luxury borders */
+.luxury-border {
+    border: 1px solid var(--gold-accent);
+}
+
+.luxury-border-subtle {
+    border: 1px solid var(--silver-accent);
+}
+
+/* Luxury shadows */
+.luxury-shadow {
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+}
+
+.luxury-shadow-lg {
+    box-shadow: 0 8px 40px rgba(212, 175, 55, 0.3);
+}
+
+/* Luxury gradients */
+.luxury-gradient {
+    background: linear-gradient(135deg, var(--gold-accent), var(--silver-accent));
+}
+
+.luxury-gradient-subtle {
+    background: linear-gradient(135deg, var(--warm-gray), var(--cool-gray));
+}
+
+/* Apply luxury accents to specific elements */
+.hero-title {
+    background: linear-gradient(135deg, var(--primary-color), var(--gold-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-number {
+    color: var(--gold-accent);
+    text-shadow: 0 2px 4px rgba(212, 175, 55, 0.3);
+}
+
+.badge-featured {
+    background: linear-gradient(135deg, var(--gold-accent), #b8941f);
+    color: white;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* Luxury hover effects */
+.luxury-hover:hover {
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Luxury text effects */
+.luxury-text {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.luxury-text-glow {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Luxury buttons */
+.btn-luxury {
+    background: linear-gradient(135deg, var(--gold-accent), #b8941f);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-luxury:hover {
+    background: linear-gradient(135deg, #b8941f, var(--gold-accent));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Luxury cards */
+.luxury-card {
+    border: 1px solid var(--silver-accent);
+    box-shadow: 0 4px 20px rgba(192, 192, 192, 0.1);
+    transition: all 0.3s ease;
+}
+
+.luxury-card:hover {
+    border-color: var(--gold-accent);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.2);
+}
+
+/* Luxury sections */
+.luxury-section {
+    background: linear-gradient(135deg, var(--bg-color), var(--warm-gray));
+    border-top: 2px solid var(--gold-accent);
+}
+
+/* Luxury navigation */
+.luxury-nav {
+    border-bottom: 1px solid var(--silver-accent);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Luxury footer */
+.luxury-footer {
+    background: linear-gradient(135deg, var(--bg-dark), #2a2a2a);
+    border-top: 1px solid var(--gold-accent);
+}
+
+/* Responsive luxury accents */
+@media (max-width: 768px) {
+    .luxury-shadow,
+    .luxury-shadow-lg {
+        box-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+    }
+    
+    .luxury-hover:hover {
+        transform: none;
+    }
+}

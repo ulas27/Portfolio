@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block title %}İletişim - İnci Gold{% endblock %}
+{% block content %}
+<script>
+document.body.classList.add('contact-page');
+</script>
+<section class="container contact-section">
+  <h1 class="section-title" style="text-align: center;">İletişim</h1>
+  
+  <!-- WhatsApp Quick Contact Section - En Üstte -->
+  <div class="whatsapp-horizontal-section">
+    <div class="container">
+      <div class="whatsapp-horizontal-content">
+        <div class="whatsapp-info">
+          <h3>Hızlı İletişim</h3>
+          <p>Kısa sorularınız için WhatsApp üzerinden bizimle iletişime geçin. Anında yanıt alın!</p>
+        </div>
+        <div class="whatsapp-buttons-horizontal">
+          <a href="https://wa.me/905468992717?text=Merhaba, ürünleriniz hakkında bilgi almak istiyorum." target="_blank" class="whatsapp-btn-horizontal">
+            Genel Sorular
+          </a>
+          <a href="https://wa.me/905468992717?text=Merhaba, siparişim hakkında bilgi almak istiyorum." target="_blank" class="whatsapp-btn-horizontal">
+            Sipariş Takibi
+          </a>
+          <a href="https://wa.me/905468992717?text=Merhaba, özel tasarım hakkında konuşmak istiyorum." target="_blank" class="whatsapp-btn-horizontal">
+            Özel Tasarım
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Form Section - Ortada -->
+  <div class="contact-form-section">
+    <div class="container">
+      <h3 class="form-title">Bize Yazın</h3>
+      <p class="form-subtitle" style="color: #000;">Ticari iletişim ve detaylı sorularınız için aşağıdaki formu kullanabilirsiniz.</p>
+      
+      <form method="POST" id="contactForm" class="modern-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name" class="form-label">Ad Soyad</label>
+            <input type="text" id="name" name="name" required class="form-control" placeholder="Adınızı ve soyadınızı girin">
+          </div>
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" required class="form-control" placeholder="ornek@email.com">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone" class="form-label">Telefon (Opsiyonel)</label>
+          <input type="tel" id="phone" name="phone" class="form-control" placeholder="İletişim numarası" pattern="[0-9]{10}" title="10 haneli telefon numarası girin">
+        </div>
+        
+        <div class="form-group">
+          <label for="subject" class="form-label">Konu</label>
+          <input type="text" id="subject" name="subject" value="Genel İletişim" class="form-control" placeholder="Mesajınızın konusunu belirtin">
+        </div>
+        
+        <div class="form-group">
+          <label for="message" class="form-label">Mesajınız</label>
+        <textarea id="message" name="message" rows="5" required class="form-control" 
+                  placeholder="Sorunuzu veya mesajınızı detaylı bir şekilde yazın..." 
+                  maxlength="1000" 
+                  oninput="validateMessage(this)"></textarea>
+        </div>
+        
+        <button type="submit" class="admin-btn admin-btn-primary">
+          MESAJI GÖNDER
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FAQ Section - En Altta -->
+  <div class="faq-section">
+    <div class="container">
+      <div class="faq-container">
+        <h3 class="faq-title">Sıkça Sorulan Sorular</h3>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Ürünlerinizde kalite garantisi var mı?</h4>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Evet, tüm ürünlerimizde 2 yıl kalite garantisi bulunmaktadır. Ayrıca tüm mücevherlerimiz sertifikalıdır.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Kargo süresi ne kadar?</h4>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>İstanbul içi 1 gün, Türkiye geneli 2-3 iş günü içinde teslimat yapılmaktadır. 500 TL üzeri siparişlerde ücretsiz kargo.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Özel tasarım yapıyor musunuz?</h4>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Evet, hayalinizdeki mücevheri birlikte tasarlayabiliriz. Özel tasarım süreci 2-4 hafta arasında tamamlanır.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>İade ve değişim politikası nedir?</h4>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>14 gün içinde koşulsuz iade hakkınız bulunmaktadır. Ürün orijinal ambalajında ve etiketli olmalıdır.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form submission handling
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = document.getElementById('message').value;
+            const minLength = 10;
+            const maxLength = 1000;
+            
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Gönderiliyor...';
+            submitBtn.disabled = true;
+            
+            // Function to reset button state
+            function resetButton() {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+            
+            // Minimum karakter kontrolü
+            if (message.length < minLength) {
+                showNotification(`Mesajınız en az ${minLength} karakter olmalıdır. Şu anda ${message.length} karakter yazdınız.`, 'error');
+                resetButton();
+                return;
+            }
+            
+            // Maksimum karakter kontrolü
+            if (message.length > maxLength) {
+                showNotification(`Mesajınız çok uzun! Maksimum ${maxLength} karakter olabilir.`, 'error');
+                resetButton();
+                return;
+            }
+            
+            // Submit form
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showNotification('Mesajınız başarıyla gönderildi!', 'success');
+                    form.reset();
+                } else {
+                    // Show error message
+                    showNotification(data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+            })
+            .finally(() => {
+                resetButton();
+            });
+        });
+    }
+    
+    // FAQ functionality - Only clicked item opens/closes
+    document.querySelectorAll('.faq-question').forEach((question, index) => {
+        question.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const faqItem = this.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            console.log('Clicked FAQ item:', index, 'isActive:', isActive);
+            
+            // Close all FAQ items first
+            document.querySelectorAll('.faq-item').forEach((item, itemIndex) => {
+                if (itemIndex !== index) {
+                    item.classList.remove('active');
+                    console.log('Closing item:', itemIndex);
+                }
+            });
+            
+            // Toggle clicked item
+            if (isActive) {
+                faqItem.classList.remove('active');
+                console.log('Closing clicked item:', index);
+            } else {
+                faqItem.classList.add('active');
+                console.log('Opening clicked item:', index);
+            }
+        });
+    });
+    
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+});
+
+        // Mesaj doğrulama fonksiyonu
+        function validateMessage(textarea) {
+            const currentLength = textarea.value.length;
+            const minLength = 10;
+            const maxLength = 1000;
+            
+            // Sadece hata durumunda pop-up göster
+            if (currentLength > 0 && currentLength < minLength) {
+                // Minimum karakter kontrolü - sadece form submit edilirken kontrol edilecek
+                return;
+            }
+            
+            if (currentLength > maxLength) {
+                showNotification('Mesajınız çok uzun! Maksimum 1000 karakter olabilir.', 'error');
+                textarea.value = textarea.value.substring(0, maxLength);
+            }
+        }
+
+</script>
+{% endblock %}

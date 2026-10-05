@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Ödeme Başarısız{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h1 class="text-danger mb-3">Ödeme Başarısız</h1>
+  <p>Üzgünüz, ödeme işlemi tamamlanamadı. Lütfen tekrar deneyiniz.</p>
+  <a class="btn btn-outline-primary mt-3" href="{{ url_for('cart.checkout') }}">Ödeme Adımına Geri Dön</a>
+</div>
+{% endblock %}

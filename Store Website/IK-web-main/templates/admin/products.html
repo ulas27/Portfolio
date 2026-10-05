@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Ürün Yönetimi - Admin{% endblock %}
+{% block content %}
+<section class="container" style="padding: 2rem 0;">
+    <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Ürün Yönetimi</h1>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{{ url_for('admin.categories') }}" class="admin-btn admin-btn-secondary">
+                KATEGORİLER
+            </a>
+            <a href="{{ url_for('admin.add_product') }}" class="admin-btn admin-btn-primary">
+                + YENİ ÜRÜN
+            </a>
+        </div>
+    </div>
+
+    <!-- Arama ve Filtreleme -->
+    <div class="filters" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+        <form method="GET" style="display: flex; gap: 1rem; align-items: end;">
+            <div style="flex: 1;">
+                <label>Ürün Ara:</label>
+                <input type="text" name="search" value="{{ request.args.get('search', '') }}" 
+                       placeholder="Ürün adı veya SKU..." class="form-control">
+            </div>
+            <div style="min-width: 200px;">
+                <label>Kategori:</label>
+                <select name="category" class="form-control">
+                    <option value="">Tüm Kategoriler</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" 
+                            {% if request.args.get('category') == category.id|string %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-secondary">Filtrele</button>
+            <a href="{{ url_for('admin.products') }}" class="btn btn-outline-secondary">Temizle</a>
+        </form>
+    </div>
+
+    <!-- Ürün Listesi -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Resim</th>
+                    <th>Ürün Adı</th>
+                    <th>Kategori</th>
+                    <th>Fiyat</th>
+                    <th>Stok</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products.items %}
+                <tr>
+                    <td>
+                        {% if product.main_image_url %}
+                        <img src="{{ product.main_image_url }}" alt="{{ product.name }}" width="50">
+                        {% else %}
+                        <img src="/static/images/no-image.jpg" alt="No image" width="50">
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('admin.edit_product', id=product.id) }}">{{ product.name }}</a></td>
+                    <td>{{ product.sku }}</td>
+                    <td>₺{{ '%.2f'|format(product.price) }}</td>
+                    <td>
+                        <span class="badge {% if product.stock_quantity <= 5 %}badge-danger{% elif product.stock_quantity <= 10 %}badge-warning{% else %}badge-success{% endif %}">
+                            {{ product.stock_quantity }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {% if product.is_active %}badge-success{% else %}badge-secondary{% endif %}">
+                            {% if product.is_active %}Aktif{% else %}Pasif{% endif %}
+                        </span>
+                        {% if product.is_featured %}
+                        <span class="badge badge-info">Öne Çıkan</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center gap-1">
+                            <a href="{{ url_for('shop.product_detail', slug=product.slug) }}" 
+                               class="btn btn-sm btn-outline-info" title="Görüntüle" target="_blank">
+                                GÖRÜNTÜLE
+                            </a>
+                            <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" 
+                               class="btn btn-sm btn-outline-primary" title="Düzenle">
+                                DÜZENLE
+                            </a>
+                            <form method="POST" action="{{ url_for('admin.delete_product', product_id=product.id) }}" 
+                                  style="display: inline;" onsubmit="return confirm('Bu ürünü silmek istediğinizden emin misiniz?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Sil">
+                                    SİL
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">Ürün bulunamadı.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Sayfalama -->
+    {% if products.pages > 1 %}
+    <nav aria-label="Ürün sayfalama">
+        <ul class="pagination justify-content-center">
+            {% if products.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.products', page=products.prev_num, **request.args) }}">Önceki</a>
+            </li>
+            {% endif %}
+            
+            {% for page_num in products.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num != products.page %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('admin.products', page=page_num, **request.args) }}">{{ page_num }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% endif %}
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.products', page=products.next_num, **request.args) }}">Sonraki</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</section>
+
+<style>
+.badge {
+    padding: 0.25em 0.6em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+.badge-success { background-color: #28a745; color: white; }
+.badge-danger { background-color: #dc3545; color: white; }
+.badge-warning { background-color: #ffc107; color: #212529; }
+.badge-info { background-color: #17a2b8; color: white; }
+.badge-secondary { background-color: #6c757d; color: white; }
+
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.table th {
+    background-color: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+}
+</style>
+{% endblock %}

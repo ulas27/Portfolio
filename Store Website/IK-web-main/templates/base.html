@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}İnci Gold - Lüks Mücevher Koleksiyonu{% endblock %}</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="{% block description %}En kaliteli altın, gümüş ve değerli taş mücevherler.{% endblock %}">
+    <meta name="keywords" content="kuyumcu, altın, gümüş, mücevher, yüzük, kolye, küpe, bilezik">
+    <meta name="author" content="İnci Gold">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="tr">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{% block og_title %}İnci Gold - Lüks Mücevher Koleksiyonu{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}En kaliteli altın, gümüş ve değerli taş mücevherler.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:site_name" content="İnci Gold">
+    <meta property="og:locale" content="tr_TR">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}İnci Gold - Lüks Mücevher Koleksiyonu{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}En kaliteli altın, gümüş ve değerli taş mücevherler.{% endblock %}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request.url }}">
+    
+    <!-- CSRF Token for JS -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20250112') }}">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Ana İçeriğe Geç</a>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="{{ url_for('main.index') }}" aria-label="İnci Gold Ana Sayfa">
+                        <strong>İnci Gold</strong>
+                    </a>
+                </div>
+                
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="{{ url_for('main.index') }}" class="nav-link">Ana Sayfa</a></li>
+                    <li class="dropdown">
+                        <a href="{{ url_for('shop.index') }}" class="nav-link">Ürünler</a>
+                        <div class="dropdown-content">
+                            {% for category in categories %}
+                            <a href="{{ url_for('shop.category', slug=category.slug) }}">{{ category.name }}</a>
+                            {% endfor %}
+                            <a href="{{ url_for('shop.index') }}" class="dropdown-item-all">Tüm Ürünler</a>
+                        </div>
+                    </li>
+                    <li><a href="{{ url_for('main.about') }}" class="nav-link">Hakkımızda</a></li>
+                    <li><a href="{{ url_for('main.contact') }}" class="nav-link">İletişim</a></li>
+                </ul>
+                
+                <!-- Mobile Menu Button -->
+                <button class="hamburger" id="hamburger" aria-label="Menüyü Aç/Kapat" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <div class="nav-actions">
+                    <a href="{{ url_for('cart.view_cart') }}" class="cart-link" aria-label="Sepetim">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span class="cart-count" id="cart-count" aria-label="Sepetteki ürün sayısı">0</span>
+                    </a>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">Admin Paneli</a>
+                        {% else %}
+                            <a href="{{ url_for('auth.profile') }}" class="btn btn-outline">Profil</a>
+                        {% endif %}
+                        <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Çıkış</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline">Giriş</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Kayıt</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash messages popup container -->
+    <div id="flash-popup-container" role="alert" aria-live="assertive"></div>
+    
+    <!-- Flash messages data for JS -->
+    <script>
+        window.flashMessages = [
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {category: '{{ category }}', message: '{{ message|e|safe }}'},
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        ];
+        
+        // Debug flash messages
+        console.log('Flash messages from server:', window.flashMessages);
+    </script>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span>İnci Gold</span>
+                    </div>
+                    <p>Kaliteli mücevher ve güvenilir Hizmet anlayışı ile 1985'ten bu yana yanınızdayız.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Hızlı Linkler</h4>
+                    <ul>
+                        <li><a href="{{ url_for('main.index') }}">Ana Sayfa</a></li>
+                        <li><a href="{{ url_for('shop.index') }}">Mağaza</a></li>
+                        <li><a href="{{ url_for('main.about') }}">Hakkımızda</a></li>
+                        <li><a href="{{ url_for('main.contact') }}">İletişim</a></li>
+                        <li><a href="{{ url_for('main.about') }}#faq-section">Sıkça Sorulan Sorular</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Yeni ürünler ve özel kampanyalardan haberdar olmak için ana sayfamızdaki newsletter formunu kullanabilirsiniz.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>İletişim</h4>
+                    <div class="contact-info">
+                        <p>Değirmiçem, Gazi Muhtar Paşa Blv. No:31, 27090 Şehitkamil/Gaziantep, Türkiye</p>
+                        <p>+90 546 899 27 17</p>
+                        <p>info@incigold.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 İnci Gold. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JS -->
+    <script src="{{ url_for('static', filename='js/main.js', v='20250109') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/scroll-animations.js', v='20250109v7') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/micro-interactions.js', v='20250109') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/dark-mode.js', v='20250109') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/flash-messages.js', v='20250109') }}" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Öne Çıkan Ürünler - İnci Gold{% endblock %}
+{% block content %}
+<section class="container" style="padding: 2rem 0;">
+  <h1>Öne Çıkan Ürünler</h1>
+  <div class="products-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <a href="{{ url_for('shop.product_detail', slug=product.slug) }}">
+        <img src="{{ product.main_image_url }}" alt="{{ product.name }}" loading="lazy">
+        <h5>{{ product.name }}</h5>
+        <p>{{ "{:,.2f}".format(product.price) }} TL</p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="pagination" style="margin-top: 1.5rem;">
+    {% if products.has_prev %}
+      <a class="btn btn-outline" href="{{ url_for('shop.featured', page=products.prev_num) }}">Önceki</a>
+    {% endif %}
+    <span style="margin: 0 1rem;">Sayfa {{ products.page }} / {{ products.pages }}</span>
+    {% if products.has_next %}
+      <a class="btn btn-outline" href="{{ url_for('shop.featured', page=products.next_num) }}">Sonraki</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

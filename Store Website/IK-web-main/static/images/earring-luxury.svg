@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffd700;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="diamondGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f0f8ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="300" fill="#f8f9fa"/>
+  
+  <!-- Left Earring -->
+  <g transform="translate(100, 80)">
+    <!-- Hook -->
+    <path d="M 0 0 Q 5 -10 10 0" stroke="url(#goldGradient)" stroke-width="2" fill="none"/>
+    
+    <!-- Main Gem -->
+    <circle cx="15" cy="20" r="12" fill="url(#diamondGradient)" filter="url(#glow)"/>
+    <circle cx="15" cy="20" r="8" fill="#ffffff" opacity="0.9"/>
+    
+    <!-- Center Diamond -->
+    <polygon points="15,12 20,18 15,24 10,18" fill="url(#diamondGradient)"/>
+    <polygon points="15,12 17,16 15,20 13,16" fill="#ffffff" opacity="0.8"/>
+    
+    <!-- Drop -->
+    <ellipse cx="15" cy="40" rx="8" ry="12" fill="url(#diamondGradient)" opacity="0.8"/>
+    <polygon points="15,35 18,40 15,45 12,40" fill="#ffffff" opacity="0.7"/>
+  </g>
+  
+  <!-- Right Earring -->
+  <g transform="translate(200, 80)">
+    <!-- Hook -->
+    <path d="M 0 0 Q -5 -10 -10 0" stroke="url(#goldGradient)" stroke-width="2" fill="none"/>
+    
+    <!-- Main Gem -->
+    <circle cx="-15" cy="20" r="12" fill="url(#diamondGradient)" filter="url(#glow)"/>
+    <circle cx="-15" cy="20" r="8" fill="#ffffff" opacity="0.9"/>
+    
+    <!-- Center Diamond -->
+    <polygon points="-15,12 -20,18 -15,24 -10,18" fill="url(#diamondGradient)"/>
+    <polygon points="-15,12 -17,16 -15,20 -13,16" fill="#ffffff" opacity="0.8"/>
+    
+    <!-- Drop -->
+    <ellipse cx="-15" cy="40" rx="8" ry="12" fill="url(#diamondGradient)" opacity="0.8"/>
+    <polygon points="-15,35 -18,40 -15,45 -12,40" fill="#ffffff" opacity="0.7"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <circle cx="80" cy="100" r="1.5" fill="#ffffff" opacity="0.8">
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="220" cy="110" r="1" fill="#ffffff" opacity="0.6">
+    <animate attributeName="opacity" values="0.2;0.8;0.2" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="90" cy="150" r="1.2" fill="#ffffff" opacity="0.7">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Luxury Text -->
+  <text x="150" y="250" text-anchor="middle" font-family="serif" font-size="14" fill="#666" opacity="0.7">LUXURY EARRINGS</text>
+</svg>

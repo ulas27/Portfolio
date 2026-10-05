@@ -1,0 +1,666 @@
+{% extends 'base.html' %}
+{% block title %}Kategoriler - Admin{% endblock %}
+
+{% block extra_head %}
+<!-- SortableJS for drag & drop -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+/* Drag & Drop Stilleri */
+.sortable-ghost {
+    opacity: 0.4;
+    background: #f8f9fa;
+}
+
+.sortable-chosen {
+    background: #e3f2fd;
+}
+
+.sortable-drag {
+    background: #bbdefb;
+    transform: rotate(2deg);
+}
+
+/* Yukarı/aşağı buton stilleri */
+.move-up, .move-down {
+    cursor: pointer !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+}
+
+.move-up:hover, .move-down:hover {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Kategoriler</h1>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('admin.products') }}" class="admin-btn admin-btn-secondary">GERİ DÖN</a>
+      <a href="{{ url_for('admin.add_category') }}" class="admin-btn admin-btn-primary">+ YENİ KATEGORİ</a>
+    </div>
+  </div>
+  {% if categories %}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle" id="categoriesTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Resim</th>
+          <th>Ad</th>
+          <th>Açıklama</th>
+          <th>İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in categories %}
+        <tr data-category-id="{{ c.id }}">
+          <td>{{ loop.index }}</td>
+          <td>
+            {% if c.image %}
+              <img src="{{ url_for('static', filename='uploads/categories/' + c.image) }}" 
+                   alt="{{ c.name }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+            {% else %}
+              <div class="bg-light d-flex align-items-center justify-content-center" 
+                   style="width: 50px; height: 50px; border-radius: 4px;">
+                <small class="text-muted">-</small>
+              </div>
+            {% endif %}
+          </td>
+          <td>
+            <strong>{{ c.name }}</strong>
+            <br><small class="text-muted">{{ c.slug }}</small>
+          </td>
+          <td>{{ c.description or '-' }}</td>
+          <td>
+            <div class="btn-group" role="group">
+              <a href="{{ url_for('admin.edit_category', id=c.id) }}" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-edit"></i> Düzenle
+              </a>
+              <button type="button" class="btn btn-outline-danger btn-sm" 
+                      onclick="deleteCategory({{ c.id }}, '{{ c.name|e }}', {{ c.products|length }})">
+                <i class="fas fa-trash"></i> Sil
+              </button>
+              <div class="btn-group-vertical ms-1" role="group">
+                <button type="button" class="btn btn-outline-secondary btn-sm move-up" title="Yukarı taşı" style="padding: 2px 6px; font-size: 12px;">
+                  ↑
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm move-down" title="Aşağı taşı" style="padding: 2px 6px; font-size: 12px;">
+                  ↓
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="alert alert-info">Henüz kategori yok.</div>
+  {% endif %}
+</div>
+
+<!-- İnci Gold Tasarımında Silme Onay Modal -->
+<div id="deleteModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-icon-container">
+        <div class="modal-icon">
+          <i class="fas fa-trash-alt"></i>
+        </div>
+      </div>
+      <h3>Kategori Silme</h3>
+      <p class="modal-subtitle">Bu işlem geri alınamaz</p>
+    </div>
+    <div class="modal-main">
+      <div class="modal-body">
+        <div class="modal-content-area">
+          <p id="deleteMessage" class="modal-message"></p>
+          <div class="modal-warning-box">
+            <div class="warning-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="warning-text">
+              <strong>DİKKAT</strong><br>
+              <span>Bu işlem kalıcıdır ve geri alınamaz</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeModal()">
+          <i class="fas fa-arrow-left"></i>
+          Geri Al
+        </button>
+        <button type="button" class="btn-delete" id="confirmDelete">
+          <i class="fas fa-trash"></i>
+          Sil
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* İnci Gold Modal Tasarımı - Köşeli ve Sharp */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(3px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #ffffff;
+  border: 3px solid #000000;
+  max-width: 650px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: slideIn 0.2s ease-out;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 0 0 1px #000, 8px 8px 0 0 #000;
+}
+
+/* Sol Panel - Siyah Header */
+.modal-header {
+  background: #000000;
+  color: #ffffff;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 3px solid #000000;
+  min-width: 200px;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+}
+
+.modal-icon-container {
+  margin-bottom: 16px;
+}
+
+.modal-icon {
+  width: 60px;
+  height: 60px;
+  background: #ffffff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 2px solid #000000;
+}
+
+.modal-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.5px;
+}
+
+.modal-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #cccccc;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Sağ Panel - Beyaz İçerik */
+.modal-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  padding: 32px 28px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal-content-area {
+  width: 100%;
+}
+
+.modal-message {
+  font-size: 1.1rem;
+  color: #000000;
+  margin-bottom: 24px;
+  line-height: 1.6;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-warning-box {
+  background: #f8f9fa;
+  border: 2px solid #000000;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.warning-icon {
+  width: 40px;
+  height: 40px;
+  background: #ff4444;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 2px solid #000000;
+  flex-shrink: 0;
+}
+
+.warning-text {
+  flex: 1;
+}
+
+.warning-text strong {
+  font-size: 0.9rem;
+  color: #ff4444;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.warning-text span {
+  font-size: 0.85rem;
+  color: #666666;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-footer {
+  padding: 24px 28px;
+  background: #f8f9fa;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  border-top: 3px solid #000000;
+}
+
+.btn-cancel, .btn-delete {
+  padding: 14px 28px;
+  border: 2px solid #000000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.btn-cancel {
+  background: #ffffff;
+  color: #000000;
+}
+
+.btn-cancel:hover {
+  background: #000000;
+  color: #ffffff;
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 #000000;
+}
+
+.btn-delete {
+  background: #000000;
+  color: #ffffff;
+}
+
+.btn-delete:hover {
+  background: #ff4444;
+  border-color: #ff4444;
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 #ff4444;
+}
+
+/* Animasyonlar */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 20px;
+    flex-direction: column;
+  }
+  
+  .modal-header {
+    min-width: auto;
+    border-right: none;
+    border-bottom: 3px solid #000000;
+    padding: 24px;
+  }
+  
+  .modal-body {
+    padding: 24px;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    padding: 20px 24px;
+  }
+  
+  .btn-cancel, .btn-delete {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .modal-warning-box {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .warning-icon {
+    align-self: center;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let categoryToDelete = null;
+
+    window.deleteCategory = function(id, name, productCount) {
+        categoryToDelete = id;
+        
+        let message = `"<strong>${name}</strong>" kategorisini silmek istediğinizden emin misiniz?`;
+        
+        if (productCount > 0) {
+            message += `<br><br><span style="color: #dc3545;"><strong>⚠️ Uyarı:</strong> Bu kategoride <strong>${productCount}</strong> ürün bulunmaktadır. Bu ürünler de silinecektir!</span>`;
+        }
+        
+        document.getElementById('deleteMessage').innerHTML = message;
+        showModal();
+    };
+
+    function showModal() {
+        document.getElementById('deleteModal').classList.add('show');
+        document.body.style.overflow = 'hidden'; // Sayfa kaydırmayı engelle
+    }
+
+    window.closeModal = function() {
+        document.getElementById('deleteModal').classList.remove('show');
+        document.body.style.overflow = ''; // Sayfa kaydırmayı geri aç
+        // categoryToDelete = null; // Bu satırı kaldırdık - ID'yi koruyoruz
+    };
+
+    function performDelete() {
+        if (categoryToDelete) {
+            console.log('Silinecek kategori ID:', categoryToDelete); // Debug
+            // Modal'ı kapat
+            closeModal();
+            
+            // Loading göstergesi (opsiyonel)
+            const deleteBtn = document.querySelector(`button[onclick*="${categoryToDelete}"]`);
+            if (deleteBtn) {
+                deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Siliniyor...';
+                deleteBtn.disabled = true;
+            }
+            
+            fetch(`/admin/categories/${categoryToDelete}/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Silme işlemi başarısız: ' + (data.message || 'Bilinmeyen hata'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Silme işlemi sırasında bir hata oluştu: ' + error.message);
+            });
+        }
+    }
+
+    // Drag & Drop sıralama sistemi
+    function initializeSortable() {
+        const tbody = document.querySelector('#categoriesTable tbody');
+        if (!tbody) {
+            console.log('Tbody bulunamadı');
+            return;
+        }
+
+        // SortableJS'in yüklenip yüklenmediğini kontrol et
+        if (typeof Sortable === 'undefined') {
+            console.error('SortableJS yüklenmedi!');
+            // Alternatif: Basit drag & drop
+            initializeSimpleDragDrop();
+            return;
+        }
+
+        console.log('SortableJS başlatılıyor...');
+        
+        try {
+            new Sortable(tbody, {
+                handle: '.drag-handle',
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                forceFallback: true,
+                onStart: function(evt) {
+                    console.log('Drag başladı');
+                },
+                onEnd: function(evt) {
+                    console.log('Drag bitti');
+                    const categoryIds = [];
+                    const rows = tbody.querySelectorAll('tr[data-category-id]');
+                    
+                    rows.forEach((row, index) => {
+                        const categoryId = row.getAttribute('data-category-id');
+                        categoryIds.push({
+                            id: parseInt(categoryId),
+                            sort_order: index + 1
+                        });
+                    });
+
+                    // Backend'e yeni sıralamayı gönder
+                    updateCategoryOrder(categoryIds);
+                }
+            });
+            
+            console.log('SortableJS başarıyla başlatıldı');
+        } catch (error) {
+            console.error('SortableJS hatası:', error);
+            initializeSimpleDragDrop();
+        }
+    }
+
+    // Basit yukarı/aşağı buton sistemi
+    function initializeSimpleDragDrop() {
+        console.log('Yukarı/aşağı buton sistemi başlatılıyor...');
+        
+        // Yukarı butonları
+        const moveUpButtons = document.querySelectorAll('.move-up');
+        moveUpButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Yukarı buton tıklandı');
+                
+                const row = button.closest('tr');
+                const tbody = row.parentNode;
+                const rows = Array.from(tbody.querySelectorAll('tr[data-category-id]'));
+                const currentIndex = rows.indexOf(row);
+                
+                if (currentIndex > 0) {
+                    console.log('Yukarı taşınıyor...');
+                    tbody.insertBefore(row, rows[currentIndex - 1]);
+                    updateRowNumbers();
+                    saveNewOrder();
+                } else {
+                    console.log('Zaten en üstte');
+                }
+            });
+        });
+        
+        // Aşağı butonları
+        const moveDownButtons = document.querySelectorAll('.move-down');
+        moveDownButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Aşağı buton tıklandı');
+                
+                const row = button.closest('tr');
+                const tbody = row.parentNode;
+                const rows = Array.from(tbody.querySelectorAll('tr[data-category-id]'));
+                const currentIndex = rows.indexOf(row);
+                
+                if (currentIndex < rows.length - 1) {
+                    console.log('Aşağı taşınıyor...');
+                    tbody.insertBefore(row, rows[currentIndex + 1].nextSibling);
+                    updateRowNumbers();
+                    saveNewOrder();
+                } else {
+                    console.log('Zaten en altta');
+                }
+            });
+        });
+    }
+
+    // Yeni sıralamayı kaydet
+    function saveNewOrder() {
+        const tbody = document.querySelector('#categoriesTable tbody');
+        const rows = tbody.querySelectorAll('tr[data-category-id]');
+        const categoryIds = [];
+        
+        rows.forEach((row, index) => {
+            const categoryId = row.getAttribute('data-category-id');
+            categoryIds.push({
+                id: parseInt(categoryId),
+                sort_order: index + 1
+            });
+        });
+
+        updateCategoryOrder(categoryIds);
+    }
+
+    // Sıralama güncelleme fonksiyonu
+    function updateCategoryOrder(categoryIds) {
+        fetch('/admin/categories/update-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ categories: categoryIds })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Sıra numaralarını güncelle (görsel feedback)
+                updateRowNumbers();
+            } else {
+                alert('Sıralama güncellenirken hata oluştu: ' + (data.message || 'Bilinmeyen hata'));
+                location.reload(); // Hata durumunda sayfayı yenile
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Sıralama güncellenirken bir hata oluştu');
+            location.reload(); // Hata durumunda sayfayı yenile
+        });
+    }
+
+    // Satır numaralarını güncelle
+    function updateRowNumbers() {
+        const rows = document.querySelectorAll('#categoriesTable tbody tr');
+        rows.forEach((row, index) => {
+            const numberCell = row.querySelector('td:first-child');
+            if (numberCell) {
+                numberCell.textContent = index + 1;
+            }
+        });
+    }
+
+    // Confirm delete butonuna event listener ekle
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        performDelete();
+    });
+
+    // Drag & Drop sistemini başlat (biraz gecikme ile)
+    setTimeout(function() {
+        initializeSortable();
+    }, 500);
+
+    // ESC tuşu ile modal'ı kapat
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // Modal dışına tıklayınca kapat
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+});
+</script>
+{% endblock %}

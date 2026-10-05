@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Ödeme Beklemede - İnci Gold{% endblock %}
+{% block content %}
+<section class="container" style="padding:2rem 0; text-align:center;">
+  <h1>Ödeme Beklemede</h1>
+  <p>Ödeme işleminiz şu an beklemede. En kısa sürede sonuçlandırılacaktır.</p>
+  <p><strong>Sipariş No:</strong> {{ order.order_number }}</p>
+  <div style="display:flex; gap:.75rem; justify-content:center; margin-top:1rem;">
+    <a class="btn btn-primary" href="{{ url_for('auth.order_detail', order_id=order.id) }}">Sipariş Detayı</a>
+    <a class="btn btn-outline" href="{{ url_for('auth.orders') }}">Siparişlerim</a>
+    <a class="btn btn-outline" href="{{ url_for('main.index') }}">Ana Sayfa</a>
+  </div>
+
+  <div class="alert alert-info" style="max-width:800px;margin:1.5rem auto;text-align:left;">
+    <strong>Bilgilendirme:</strong> Kuyumculuk ürünleri için <strong>IBAN/banka havalesi</strong> kabul edilmemektedir. Ödemeler sadece <strong>online kart işlemi</strong> ile tamamlanır. Siparişinizin ödemesi sonuçlandığında e‑posta ile bilgilendirileceksiniz.
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,170 @@
+/* Scroll Animations - Fade In Effects */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Different animation delays for staggered effect */
+.scroll-animate.delay-1 {
+    transition-delay: 0.1s;
+}
+
+.scroll-animate.delay-2 {
+    transition-delay: 0.2s;
+}
+
+.scroll-animate.delay-3 {
+    transition-delay: 0.3s;
+}
+
+.scroll-animate.delay-4 {
+    transition-delay: 0.4s;
+}
+
+.scroll-animate.delay-5 {
+    transition-delay: 0.5s;
+}
+
+/* Slide from left animation */
+.scroll-animate.slide-left {
+    transform: translateX(-50px);
+}
+
+.scroll-animate.slide-left.animate {
+    transform: translateX(0);
+}
+
+/* Slide from right animation */
+.scroll-animate.slide-right {
+    transform: translateX(50px);
+}
+
+.scroll-animate.slide-right.animate {
+    transform: translateX(0);
+}
+
+/* Scale animation */
+.scroll-animate.scale {
+    transform: scale(0.8);
+}
+
+.scroll-animate.scale.animate {
+    transform: scale(1);
+}
+
+/* Fade in from bottom with bounce */
+.scroll-animate.bounce {
+    transform: translateY(50px);
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.scroll-animate.bounce.animate {
+    transform: translateY(0);
+}
+
+/* Rotate animation */
+.scroll-animate.rotate {
+    transform: rotate(-5deg) translateY(30px);
+}
+
+.scroll-animate.rotate.animate {
+    transform: rotate(0deg) translateY(0);
+}
+
+/* Stagger animation for grids */
+.scroll-animate.stagger {
+    transition-delay: calc(var(--stagger-delay, 0) * 0.1s);
+}
+
+/* Hero section special animation */
+.hero .scroll-animate {
+    transform: translateY(50px) scale(0.95);
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero .scroll-animate.animate {
+    transform: translateY(0) scale(1);
+}
+
+/* Product cards stagger animation */
+.products-grid .product-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.products-grid .product-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Categories stagger animation */
+.categories-grid .category-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.categories-grid .category-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* FAQ stagger animation */
+.faq-grid .faq-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.faq-grid .faq-item.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stats counter animation */
+.stat-number {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.stat-number.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Newsletter form animation */
+.newsletter-form-large {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.newsletter-form-large.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .scroll-animate {
+        transform: translateY(20px);
+    }
+    
+    .scroll-animate.slide-left,
+    .scroll-animate.slide-right {
+        transform: translateY(20px);
+    }
+    
+    .scroll-animate.slide-left.animate,
+    .scroll-animate.slide-right.animate {
+        transform: translateY(0);
+    }
+}

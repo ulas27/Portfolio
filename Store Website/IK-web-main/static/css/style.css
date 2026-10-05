@@ -1,0 +1,99 @@
+/* CSS Updated: 2025-01-04 21:50 - Modular Design */
+
+/* Import all CSS modules */
+@import url('base.css');
+@import url('navigation.css');
+@import url('hero.css');
+@import url('buttons.css');
+@import url('features.css');
+@import url('cards.css');
+@import url('shop.css');
+@import url('whatsapp.css');
+@import url('popup.css');
+@import url('newsletter.css');
+@import url('categories.css');
+@import url('about.css');
+@import url('faq.css');
+@import url('scroll-animations.css');
+@import url('form-interactions.css');
+@import url('loading-interactions.css');
+@import url('dark-mode.css');
+@import url('luxury-accents.css');
+@import url('auth.css');
+@import url('admin.css');
+@import url('profile.css');
+@import url('flash-messages.css');
+@import url('contact.css');
+@import url('dropdown.css');
+@import url('responsive.css');
+@import url('product-detail.css');
+@import url('homepage-products.css');
+
+/* Additional styles that don't fit in modules */
+.footer {
+    background: var(--bg-dark);
+    color: #cccccc;
+    padding: 4rem 0 2rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: white;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-section h4 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-section a {
+    color: #cccccc;
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 300;
+}
+
+.footer-section a:hover {
+    color: white;
+}
+
+.footer-section p {
+    color: #cccccc;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.footer-bottom {
+    border-top: 1px solid #333333;
+    padding-top: 2rem;
+    text-align: center;
+    color: #999999;
+    font-weight: 300;
+}

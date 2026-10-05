@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} - İnci Gold{% endblock %}
+{% block content %}
+<section class="container">
+  <div class="product-detail">
+    <div class="product-gallery">
+      <div class="main-image">
+        <img id="mainProductImage" src="{{ product.main_image_url }}" alt="{{ product.name }}">
+      </div>
+      {% if product.images and product.images|length > 1 %}
+      <div class="thumbnails">
+        {% for img in product.images %}
+        <img class="thumbnail{% if img.is_main %} active{% endif %}" 
+             src="{{ img.image_url }}" 
+             alt="{{ img.alt_text or product.name }}"
+             onclick="changeMainImage('{{ img.image_url }}', this)">
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    
+    <div class="product-info">
+      <div class="product-category">{{ product.category.name }}</div>
+      <h1>{{ product.name }}</h1>
+      
+      <div class="product-price">
+        {% if product.compare_price and product.compare_price > product.price %}
+          <span class="price-original">₺{{ '%.2f'|format(product.compare_price) }}</span>
+        {% endif %}
+        <span class="price-current">₺{{ '%.2f'|format(product.price) }}</span>
+      </div>
+      
+      {% if product.short_description or product.description %}
+      <p>{{ product.short_description or product.description }}</p>
+      {% endif %}
+      
+      {% if product.material or product.purity or product.stone_type or product.size %}
+      <ul>
+        {% if product.material %}<li><strong>Malzeme:</strong> {{ product.material }}</li>{% endif %}
+        {% if product.purity %}<li><strong>Ayar:</strong> {{ product.purity }}</li>{% endif %}
+        {% if product.stone_type %}<li><strong>Taş:</strong> {{ product.stone_type }}</li>{% endif %}
+        {% if product.size %}<li><strong>Beden:</strong> {{ product.size }}</li>{% endif %}
+      </ul>
+      {% endif %}
+      
+      <button class="btn btn-primary add-to-cart-btn" data-product-id="{{ product.id }}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: middle;">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        Sepete Ekle
+      </button>
+    </div>
+  </div>
+
+  {% if related_products %}
+  <section class="related-products">
+    <h2>Benzer Ürünler</h2>
+    <div class="products-grid">
+      {% for p in related_products %}
+      <div class="product-card">
+        <div class="product-image">
+          <a href="{{ url_for('shop.product_detail', slug=p.slug) }}">
+            <img src="{{ p.main_image_url }}" alt="{{ p.name }}" loading="lazy">
+          </a>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">
+            <a href="{{ url_for('shop.product_detail', slug=p.slug) }}">{{ p.name }}</a>
+          </h3>
+          <div class="product-price">₺{{ '%.2f'|format(p.price) }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Yorumlar Bölümü -->
+  <section class="reviews-section">
+    <h2>Müşteri Yorumları</h2>
+    
+    <!-- Yorum Formu (Sadece sipariş eden kullanıcılar için) -->
+    {% if current_user.is_authenticated %}
+    <div class="review-form-section">
+      <h3>Yorum Yap</h3>
+      <form id="reviewForm" method="POST" action="{{ url_for('shop.add_review', product_id=product.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div class="form-group">
+          <label>Puan:</label>
+          <div class="rating-input">
+            {% for i in range(1, 6) %}
+            <input type="radio" name="rating" value="{{ i }}" id="rating{{ i }}" required>
+            <label for="rating{{ i }}">★</label>
+            {% endfor %}
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Başlık:</label>
+          <input type="text" name="title" class="form-control" placeholder="Yorum başlığı..." required>
+        </div>
+        
+        <div class="form-group">
+          <label>Yorum:</label>
+          <textarea name="comment" class="form-control" rows="4" placeholder="Ürün hakkındaki görüşlerinizi yazın..." required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Yorum Gönder</button>
+      </form>
+    </div>
+    {% endif %}
+    
+    <!-- Mevcut Yorumlar -->
+    <div class="reviews-list">
+      {% if reviews %}
+        {% for review in reviews %}
+        <div class="review-item">
+          <div class="review-header">
+            <strong>{{ review.user.first_name }} {{ review.user.last_name }}</strong>
+            <div class="rating-display">
+              {% for i in range(1, 6) %}
+                {% if i <= review.rating %}
+                <span>★</span>
+                {% else %}
+                <span style="color:#ddd;">★</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% if review.title %}
+          <h4>{{ review.title }}</h4>
+          {% endif %}
+          <p>{{ review.comment }}</p>
+          <small>{{ review.created_at.strftime('%d.%m.%Y') }}</small>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-reviews">Henüz yorum yapılmamış.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script>
+// Thumbnail değiştirme fonksiyonu
+function changeMainImage(imageUrl, clickedThumbnail) {
+    // Ana resmi değiştir
+    const mainImage = document.getElementById('mainProductImage');
+    if (mainImage) {
+        mainImage.src = imageUrl;
+    }
+    
+    // Tüm thumbnail'lerin active class'ını kaldır
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+    });
+    
+    // Tıklanan thumbnail'e active class'ını ekle
+    clickedThumbnail.classList.add('active');
+}
+
+// Yıldız rating sistemi
+document.querySelectorAll('input[name="rating"]').forEach(input => {
+    input.addEventListener('change', function() {
+        const rating = parseInt(this.value);
+        const labels = document.querySelectorAll('.rating-input label');
+        labels.forEach((label, index) => {
+            if (index < rating) {
+                label.style.color = '#ffc107';
+            } else {
+                label.style.color = '#ddd';
+            }
+        });
+    });
+});
+
+// Yorum formu
+const reviewForm = document.getElementById('reviewForm');
+if (reviewForm) {
+    reviewForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+        });
+    });
+}
+</script>
+{% endblock %}

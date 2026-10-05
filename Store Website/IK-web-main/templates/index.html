@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}İnci Gold - Lüks Mücevher Koleksiyonu{% endblock %}
+
+{% block content %}
+<div class="homepage">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+        <div class="hero-content">
+            <div class="hero-visual scroll-animate">
+                <div class="jewelry-showcase">
+                    <div class="jewelry-item jewelry-item-1">
+                        <div class="jewelry-sparkle"></div>
+                    </div>
+                    <div class="jewelry-item jewelry-item-2">
+                        <div class="jewelry-sparkle"></div>
+                    </div>
+                    <div class="jewelry-item jewelry-item-3">
+                        <div class="jewelry-sparkle"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-text">
+                <h1 class="hero-title scroll-animate">Lüks Mücevher Koleksiyonu</h1>
+                <p class="hero-subtitle scroll-animate delay-1">5 yıldır Gaziantep'te kaliteli mücevherler ve özel tasarımlar. Her parça bir hikaye, her detay bir sanat eseri.</p>
+                <div class="hero-buttons scroll-animate delay-2">
+                    <a href="{{ url_for('shop.index') }}" class="btn btn-primary hero-discover-btn">
+                        Koleksiyonu Keşfet
+                    </a>
+                    <a href="{{ url_for('main.about') }}" class="btn btn-outline">
+                        Hakkımızda
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-item scroll-animate">
+                <h3>Kalite Garantisi</h3>
+                <p>Tüm ürünlerimiz kalite sertifikalı ve garantilidir</p>
+            </div>
+            <div class="feature-item scroll-animate delay-1">
+                <h3>Hızlı Kargo</h3>
+                <p>500 TL üzeri siparişlerde ücretsiz kargo</p>
+            </div>
+            <div class="feature-item scroll-animate delay-2">
+                <h3>Özel Tasarım</h3>
+                <p>Hayalinizdeki mücevheri birlikte tasarlayalım</p>
+            </div>
+            <div class="feature-item scroll-animate delay-3">
+                <h3>7/24 Destek</h3>
+                <p>Uzman ekibimiz her zaman hizmetinizde</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Koleksiyonlarımız</h2>
+            <p class="section-subtitle">Her zevke uygun özel tasarımlar</p>
+        </div>
+        
+        <div class="categories-grid">
+            {% for category in categories %}
+            <div class="category-card">
+                <div class="category-image">
+                    {% if category.image %}
+                    <img src="{{ url_for('static', filename='uploads/categories/' + category.image) }}" alt="{{ category.name }}">
+                    {% else %}
+                    <div class="category-placeholder">
+                        ✨
+                    </div>
+                    {% endif %}
+                    <div class="category-overlay">
+                        <a href="{{ url_for('shop.category', slug=category.slug) }}" class="category-link">
+                            Görüntüle
+                        </a>
+                    </div>
+                </div>
+                <div class="category-info">
+                    <h3>{{ category.name }}</h3>
+                    <p>{{ category.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+{% if featured_products %}
+<section class="featured-products">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Öne Çıkan Ürünler</h2>
+            <p class="section-subtitle">En popüler ve özel ürünlerimiz</p>
+        </div>
+        
+        <div class="products-grid">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="{{ product.main_image_url }}" alt="{{ product.name }}" loading="lazy">
+                    {% if product.discount_percentage > 0 %}
+                    <div class="product-badge sale">-%{{ product.discount_percentage }}</div>
+                    {% endif %}
+                    {% if product.is_featured %}
+                    <div class="product-badge featured">Öne Çıkan</div>
+                    {% endif %}
+                    
+                    <div class="product-actions">
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h3 class="product-name">
+                        <a href="{{ url_for('shop.product_detail', slug=product.slug) }}">{{ product.name }}</a>
+                    </h3>
+                    
+                    <div class="product-rating">
+                        <span class="rating-stars">
+                            {% for i in range(5) %}
+                                {% if i < product.average_rating %}★{% else %}☆{% endif %}
+                            {% endfor %}
+                        </span>
+                        <span class="rating-count">({{ product.review_count }})</span>
+                    </div>
+                    
+                    <div class="product-price">
+                        {% if product.compare_price and product.compare_price > product.price %}
+                        <span class="price-original">₺{{ "%.2f"|format(product.compare_price) }}</span>
+                        {% endif %}
+                        <span class="price-current">₺{{ "%.2f"|format(product.price) }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="section-footer">
+            <a href="{{ url_for('shop.featured') }}" class="btn btn-outline">
+                Tümünü Gör
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- New Arrivals Section -->
+{% if new_products %}
+<section class="new-arrivals">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Yeni Gelenler</h2>
+            <p class="section-subtitle">En son eklenen ürünlerimiz</p>
+        </div>
+        
+        <div class="product-slider">
+            <div class="slider-container">
+                <div class="slider-track" id="newArrivalsTrack">
+                    {% for product in new_products %}
+                    <div class="product-slide">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="{{ product.main_image_url }}" alt="{{ product.name }}" loading="lazy">
+                                <div class="product-badge new">Yeni</div>
+                                <div class="product-actions">
+                                    <a href="{{ url_for('shop.product_detail', slug=product.slug) }}" class="btn-icon" aria-label="{{ product.name }} detayları">
+                                    </a>
+                                    {% if current_user.is_authenticated %}
+                                    <button class="btn-icon add-to-cart" data-product-id="{{ product.id }}" aria-label="Sepete ekle">
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="product-info">
+                                <h3 class="product-name">
+                                    <a href="{{ url_for('shop.product_detail', slug=product.slug) }}">{{ product.name }}</a>
+                                </h3>
+                                <div class="product-price">
+                                    {% if product.compare_price and product.compare_price > product.price %}
+                                        <span class="price-current">₺{{ "%.2f"|format(product.price) }}</span>
+                                        <span class="price-compare">₺{{ "%.2f"|format(product.compare_price) }}</span>
+                                    {% else %}
+                                        <span class="price-current">₺{{ "%.2f"|format(product.price) }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-footer">
+            <a href="{{ url_for('shop.new_arrivals') }}" class="btn btn-outline">
+                Tümünü Gör
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- About Section -->
+<section class="about-preview">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2 class="scroll-animate">Neden Bizi Seçmelisiniz?</h2>
+                <p class="scroll-animate delay-1">5 yıldır Gaziantep'te kuyumculuk sektöründe hizmet veren İnci Gold, geleneksel el işçiliği ile modern tasarımı buluşturuyor. Her mücevher, uzman kuyumcularımızın titiz çalışması ve kalite standartlarımızın bir yansımasıdır.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item scroll-animate delay-2">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Tecrübe</div>
+                    </div>
+                    <div class="stat-item scroll-animate delay-3">
+                        <div class="stat-number">2500+</div>
+                        <div class="stat-label">Mutlu Müşteri</div>
+                    </div>
+                    <div class="stat-item scroll-animate delay-4">
+                        <div class="stat-number">%100</div>
+                        <div class="stat-label">Memnuniyet</div>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('main.about') }}" class="btn btn-outline scroll-animate delay-5">
+                    Daha Fazla Bilgi
+                </a>
+            </div>
+            
+            <div class="about-image">
+                <div class="image-placeholder">
+                    🏪
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-content">
+            <div class="newsletter-text">
+                <h2>Özel Kampanyalardan Haberdar Olun</h2>
+                <p>Yeni ürünler, indirimler ve özel tekliflerden ilk siz haberdar olun.</p>
+            </div>
+            
+            <form class="newsletter-form-large" id="newsletterFormLarge">
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="E-posta adresiniz" required>
+                    <button type="submit" class="btn btn-outline">
+                        Abone Ol
+                    </button>
+                </div>
+                <p class="newsletter-note">
+                    E-posta adresiniz güvende, spam göndermiyoruz.
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: new URLSearchParams({
+                    'product_id': productId,
+                    'quantity': 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showFlashMessage('success', data.message);
+                    updateCartCount(data.cart_count);
+                } else {
+                    showFlashMessage('error', data.message || 'Bir hata oluştu.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showFlashMessage('error', 'İstek gönderilemedi. Lütfen tekrar deneyin.');
+            });
+        });
+    });
+    
+    document.getElementById('newsletterFormLarge').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const formData = new FormData(form);
+
+        fetch("{{ url_for('main.newsletter_subscribe') }}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showFlashMessage('success', data.message);
+                form.reset();
+            } else {
+                showFlashMessage('error', data.message || 'Bir hata oluştu.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showFlashMessage('error', 'Abonelik sırasında bir hata oluştu.');
+        });
+    });
+});
+</script>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/905468992717" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="WhatsApp üzerinden iletişime geçin">
+    <span class="whatsapp-text">WhatsApp</span>
+</a>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Geçmiş Talepler - Admin{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+      <h1 style="font-size: 2rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">Geçmiş Talepler</h1>
+      <p style="color: #666; margin: 0;">Okunmuş iletişim talepleri</p>
+    </div>
+    <div>
+      <a href="{{ url_for('admin.messages') }}" class="btn btn-outline-primary" style="padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none;">
+        Yeni Talepler
+      </a>
+    </div>
+  </div>
+  
+  {% if messages.items %}
+  <div class="messages-container">
+    {% for m in messages.items %}
+    <div class="message-card" style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #f0f0f0;">
+      <div class="message-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <div class="message-info">
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <span style="font-size: 1.1rem; font-weight: 600; color: var(--primary-color);">{{ m.ticket_number }}</span>
+            <span class="badge" style="background: #6c757d; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Okundu</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <span style="font-weight: 600; color: #333;">{{ m.name }}</span>
+            <span style="color: #666; font-size: 0.9rem;">{{ m.email }}</span>
+            {% if m.phone %}
+            <span style="color: #666; font-size: 0.9rem;">{{ m.phone }}</span>
+            {% endif %}
+            <span style="color: #999; font-size: 0.8rem;">{{ m.created_at.strftime('%d.%m.%Y %H:%M') if m.created_at else '' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="message-content" style="margin-bottom: 1rem;">
+        <div style="margin-bottom: 0.5rem;">
+          <strong style="color: #333;">Konu:</strong>
+          <span style="color: #666; margin-left: 0.5rem;">{{ m.subject }}</span>
+        </div>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+          <strong style="color: #333; display: block; margin-bottom: 0.5rem;">Mesaj:</strong>
+          <p style="color: #555; margin: 0; white-space: pre-wrap;">{{ m.message }}</p>
+        </div>
+      </div>
+      
+      <div class="message-footer" style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #f0f0f0;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span style="color: #666; font-size: 0.9rem;">
+            Okundu
+          </span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  <!-- Pagination -->
+  {% if messages.pages > 1 %}
+  <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if messages.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.past_messages', page=messages.prev_num) }}">Önceki</a>
+        </li>
+      {% endif %}
+      
+      {% for page_num in messages.iter_pages() %}
+        {% if page_num %}
+          {% if page_num != messages.page %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('admin.past_messages', page=page_num) }}">{{ page_num }}</a>
+            </li>
+          {% else %}
+            <li class="page-item active">
+              <span class="page-link">{{ page_num }}</span>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+      
+      {% if messages.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('admin.past_messages', page=messages.next_num) }}">Sonraki</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+  
+  {% else %}
+  <div class="empty-state" style="text-align: center; padding: 3rem 1rem;">
+    <h3 style="color: #666; margin-bottom: 1rem;">Henüz geçmiş talep yok</h3>
+    <p style="color: #999; margin: 0;">Okunmuş mesajlar burada görünecek.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

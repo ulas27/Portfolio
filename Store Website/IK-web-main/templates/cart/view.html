@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}Sepetim{% endblock %}
+{% block content %}
+<div class="container py-4 cart-page-container">
+  <div class="cart-header" style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">Sepetim</h1>
+    <p style="color: #666; margin: 0;">Seçtiğiniz ürünleri inceleyin ve ödeme adımına geçin</p>
+  </div>
+
+  {% if cart_items %}
+  <div class="cart-content">
+    <div class="cart-items">
+      {% for item in cart_items %}
+      <div class="cart-item" style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #f0f0f0;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="product-image" style="flex-shrink: 0;">
+            {% if item.product and item.product.main_image_url %}
+              <img src="{{ item.product.main_image_url }}" alt="{{ item.product.name }}" 
+                   style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;" />
+            {% else %}
+              <div style="width: 80px; height: 80px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">
+              </div>
+            {% endif %}
+          </div>
+          
+          <div class="product-info" style="flex: 1;">
+            <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 0.5rem 0; color: #333;">
+              <a href="{{ url_for('shop.product_detail', slug=item.product.slug) }}" 
+                 style="text-decoration: none; color: inherit;">{{ item.product.name }}</a>
+            </h3>
+            <p style="color: #666; margin: 0; font-size: 0.9rem;">{{ '%.2f'|format(item.price or 0) }} TL</p>
+          </div>
+          
+          <div class="quantity-controls" style="display: flex; align-items: center; gap: 0.5rem;">
+            <label style="font-size: 0.9rem; color: #666; margin: 0;">Adet:</label>
+            <div style="width: 70px; text-align: center; padding: 0.5rem; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; font-weight: 600; color: #333;">
+              {{ item.quantity }}
+            </div>
+          </div>
+          
+          <div class="item-total" style="text-align: right; min-width: 120px;">
+            <div style="font-size: 1.2rem; font-weight: normal; color: #333;">
+              {{ '%.2f'|format(item.total_price or 0) }} TL
+            </div>
+          </div>
+          
+          <div class="item-actions">
+            <button class="btn cart-remove-btn" data-item-id="{{ item.id }}"
+                    style="padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; background: #000; color: white; border: none;">
+              Sil
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="cart-summary" style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #f0f0f0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+          <h3 style="font-size: 1.3rem; font-weight: 600; margin: 0; color: #333;">Ara Toplam</h3>
+          <p style="color: #666; margin: 0.25rem 0 0 0; font-size: 0.9rem;">KDV dahil fiyatlar</p>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 1.5rem; font-weight: 700; color: #333;">
+            <span class="cart-subtotal">{{ '%.2f'|format(subtotal or 0) }}</span> TL
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <a class="btn btn-outline-secondary" href="{{ url_for('shop.index') }}" 
+           style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; text-align: center;">
+          Alışverişe Devam
+        </a>
+        <a class="btn btn-primary" href="{{ url_for('cart.checkout') }}" 
+           style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; text-align: center; background: var(--primary-color); border: none; color: white;">
+          Ödeme Adımına Geç
+        </a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <div class="empty-cart" style="text-align: center; padding: 3rem 1rem;">
+      <div style="font-size: 4rem; color: #ddd; margin-bottom: 1rem;">
+      </div>
+      <h2 style="color: #666; margin-bottom: 1rem;">Sepetiniz boş</h2>
+      <p style="color: #999; margin-bottom: 2rem;">Henüz sepetinize ürün eklemediniz. Hemen alışverişe başlayın!</p>
+      <a class="btn btn-primary" href="{{ url_for('shop.index') }}" 
+         style="padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none;">
+        Alışverişe Başla
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let pendingUpdates = 0;
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  function setCheckoutDisabled(disabled){
+    if (!checkoutBtn) return;
+    if (disabled){
+      checkoutBtn.classList.add('disabled');
+      checkoutBtn.setAttribute('aria-disabled', 'true');
+    } else {
+      checkoutBtn.classList.remove('disabled');
+      checkoutBtn.removeAttribute('aria-disabled');
+    }
+  }
+  if (checkoutBtn){
+    checkoutBtn.addEventListener('click', function(e){
+      if (pendingUpdates > 0){
+        e.preventDefault();
+        alert('Lütfen sepet güncellemelerinin tamamlanmasını bekleyin.');
+      }
+    });
+  }
+
+  // Adet değiştirme özelliği kaldırıldı - sadece gösterim
+
+  // Remove item
+  document.querySelectorAll('.cart-remove-btn').forEach(function(btn){
+    btn.addEventListener('click', async function(){
+      const tr = this.closest('tr');
+      const itemId = tr.getAttribute('data-item-id');
+      const formData = new FormData();
+      formData.append('item_id', itemId);
+      formData.append('csrf_token', '{{ csrf_token() }}');
+      pendingUpdates++;
+      setCheckoutDisabled(true);
+      try {
+        const res = await fetch('{{ url_for('cart.remove_from_cart') }}', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          tr.remove();
+          // Update header count and subtotal
+          if (typeof updateCartCount === 'function') {
+            updateCartCount(data.cart_count);
+          }
+          const subtotalEl = document.querySelector('.cart-subtotal');
+          if (subtotalEl) subtotalEl.textContent = data.cart_total.toFixed(2);
+          // If empty, show message
+          if (data.cart_count === 0) {
+            window.location.reload();
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        pendingUpdates = Math.max(0, pendingUpdates - 1);
+        if (pendingUpdates === 0) setCheckoutDisabled(false);
+      }
+    });
+  });
+</script>
+{% endblock %}

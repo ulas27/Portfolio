@@ -1,0 +1,171 @@
+/* WhatsApp Floating Button */
+.whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    animation: whatsappPulse 2s infinite;
+}
+
+.whatsapp-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #25D366;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+
+.whatsapp-link:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
+    color: white;
+    text-decoration: none;
+}
+
+.whatsapp-link i {
+    font-size: 20px;
+}
+
+.whatsapp-text {
+    display: none;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover .whatsapp-text {
+    display: inline;
+}
+
+@keyframes whatsappPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* WhatsApp Section in Contact Page */
+.whatsapp-section {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    text-align: center;
+    border: none;
+}
+
+.whatsapp-section h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.whatsapp-section p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.whatsapp-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+/* Remove any unwanted elements and ensure clean buttons */
+.whatsapp-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    background: #25D366 !important;
+    color: white !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    box-shadow: 0 2px 10px rgba(37, 211, 102, 0.3) !important;
+    position: relative !important;
+}
+
+.whatsapp-btn:hover {
+    background: #128C7E !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4) !important;
+    text-decoration: none !important;
+}
+
+/* Remove all icons from buttons */
+.whatsapp-btn i {
+    display: none !important;
+}
+
+/* Remove any form elements or unwanted styles */
+.whatsapp-btn input,
+.whatsapp-btn textarea,
+.whatsapp-btn select,
+.whatsapp-btn button {
+    display: none !important;
+}
+
+/* Ensure no borders or boxes */
+.whatsapp-btn,
+.whatsapp-btn *,
+.whatsapp-btn::before,
+.whatsapp-btn::after {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Hide WhatsApp float on contact page */
+body.contact-page .whatsapp-float {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .whatsapp-link {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .whatsapp-text {
+        display: none !important;
+    }
+    
+    .whatsapp-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .whatsapp-btn {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}

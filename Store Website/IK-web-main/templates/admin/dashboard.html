@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - İnci Gold{% endblock %}
+{% block content %}
+<section class="container" style="padding:2rem 0;">
+  <h1>Admin Dashboard</h1>
+  <div class="mb-3" style="display:flex; flex-wrap: wrap; gap:.5rem;">
+    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.products') }}">Ürünler</a>
+    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.orders') }}">Siparişler</a>
+    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.users') }}">Kullanıcılar</a>
+    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.messages') }}">Mesajlar</a>
+    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.reviews') }}">Yorumlar</a>
+    <a class="btn btn-sm btn-outline-primary" href="#" onclick="showRevenueDetails(); return false;">Gelir</a>
+    <a class="btn btn-sm btn-outline-success" href="{{ url_for('admin.manual_sale') }}">Manuel Satış</a>
+    <a class="btn btn-sm btn-outline-info" href="{{ url_for('admin.sales_history') }}">Geçmiş Satışlar</a>
+  </div>
+  <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0;">
+    <div class="card">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <strong>Kullanıcılar</strong>
+        </div>
+        <div style="font-size:1.5rem;font-weight:bold;color:#007bff;">{{ total_users }}</div>
+        <small style="color:#666;">Toplam kayıtlı kullanıcı</small>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <strong>Ürünler</strong>
+        </div>
+        <div style="font-size:1.5rem;font-weight:bold;color:#28a745;">{{ total_products }}</div>
+        <small style="color:#666;">Aktif ürün sayısı</small>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <strong>Siparişler</strong>
+        </div>
+        <div style="font-size:1.5rem;font-weight:bold;color:#ffc107;">{{ total_orders }}</div>
+        <small style="color:#666;">Toplam sipariş sayısı</small>
+      </div>
+    </div>
+    {% if pending_reviews > 0 %}
+    <div class="card" style="border-left:4px solid #17a2b8;">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <strong>Bekleyen Yorumlar</strong>
+        </div>
+        <div style="font-size:1.5rem;font-weight:bold;color:#17a2b8;">{{ pending_reviews }}</div>
+        <small style="color:#666;">Onay bekliyor</small>
+      </div>
+    </div>
+    {% endif %}
+    {% if unread_messages > 0 %}
+    <div class="card" style="border-left:4px solid #6f42c1;">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <strong>Okunmamış Mesajlar</strong>
+        </div>
+        <div style="font-size:1.5rem;font-weight:bold;color:#6f42c1;">{{ unread_messages }}</div>
+        <small style="color:#666;">İletişim formu</small>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <h3>Son Siparişler</h3>
+  <table class="table" style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th style="text-align:left;border-bottom:1px solid #eee;">Sipariş No</th>
+        <th style="text-align:left;border-bottom:1px solid #eee;">Durum</th>
+        <th style="text-align:left;border-bottom:1px solid #eee;">Tutar</th>
+        <th style="text-align:left;border-bottom:1px solid #eee;">Tarih</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in recent_orders %}
+      <tr>
+        <td>{{ o.order_number }}</td>
+        <td>{{ o.status }} / {{ o.payment_status }}</td>
+        <td>₺{{ '%.2f'|format(o.total_amount) }}</td>
+        <td>{{ o.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Gelir Detayları Modal -->
+  <div id="revenueModal" class="modal" style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);overflow-y:auto;">
+    <div class="modal-content" style="background-color:#fefefe;margin:2% auto;padding:20px;border:1px solid #888;width:90%;max-width:900px;border-radius:8px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>Gelir Analizi</h2>
+        <span class="close" onclick="closeRevenueModal()" style="color:#aaa;font-size:28px;font-weight:bold;cursor:pointer;">&times;</span>
+      </div>
+      
+      <div id="revenueDetails">
+        <div class="card mb-3">
+          <div class="card-body text-center">
+            <h3>Toplam Gelir</h3>
+            <div style="font-size:2.5rem;font-weight:bold;color:#dc3545;margin:1rem 0;">₺{{ '%.2f'|format(total_revenue) }}</div>
+            <small style="color:#666;">Tüm zamanların toplam geliri</small>
+          </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:20px;">
+          <div class="card">
+            <div class="card-body">
+              <h4>Bu Ay</h4>
+              <div style="font-size:1.5rem;color:#28a745;">₺{{ monthly_revenue }}</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h4>Geçen Ay</h4>
+              <div style="font-size:1.5rem;color:#6c757d;">₺{{ last_month_revenue }}</div>
+            </div>
+          </div>
+        </div>
+        
+        <h4>Son Siparişler (Gelir)</h4>
+        <table class="table" style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background-color:#f8f9fa;">
+              <th style="padding:8px;border:1px solid #dee2e6;">Sipariş No</th>
+              <th style="padding:8px;border:1px solid #dee2e6;">Müşteri</th>
+              <th style="padding:8px;border:1px solid #dee2e6;">Tutar</th>
+              <th style="padding:8px;border:1px solid #dee2e6;">Durum</th>
+              <th style="padding:8px;border:1px solid #dee2e6;">Tarih</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in revenue_orders %}
+            <tr>
+              <td style="padding:8px;border:1px solid #dee2e6;">{{ order.order_number }}</td>
+              <td style="padding:8px;border:1px solid #dee2e6;">{{ order.customer.full_name }}</td>
+              <td style="padding:8px;border:1px solid #dee2e6;font-weight:bold;color:#28a745;">₺{{ '%.2f'|format(order.total_amount) }}</td>
+              <td style="padding:8px;border:1px solid #dee2e6;">
+                <span style="padding:4px 8px;border-radius:4px;font-size:0.8rem;background-color:{% if order.payment_status == 'paid' %}#d4edda;color:#155724{% else %}#f8d7da;color:#721c24{% endif %};">
+                  {{ order.payment_status }}
+                </span>
+              </td>
+              <td style="padding:8px;border:1px solid #dee2e6;">{{ order.created_at.strftime('%d.%m.%Y') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function showRevenueDetails() {
+    document.getElementById('revenueModal').style.display = 'block';
+}
+
+function closeRevenueModal() {
+    document.getElementById('revenueModal').style.display = 'none';
+}
+
+// Modal dışına tıklandığında kapat
+window.onclick = function(event) {
+    const modal = document.getElementById('revenueModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

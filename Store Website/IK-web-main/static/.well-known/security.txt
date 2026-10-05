@@ -1,0 +1,57 @@
+Contact: mailto:security@incigold.com
+Contact: https://incigold.com/contact
+Expires: 2026-12-31T23:59:59.000Z
+Encryption: https://incigold.com/pgp-key.txt
+Acknowledgments: https://incigold.com/security-acknowledgments
+Preferred-Languages: tr, en
+Canonical: https://incigold.com/.well-known/security.txt
+Policy: https://incigold.com/security-policy
+
+# Security Policy
+# 
+# We take security seriously at İnci Gold. If you discover a security 
+# vulnerability, please report it to us as described below.
+#
+# Reporting Security Issues
+# 
+# Please do not report security vulnerabilities through public GitHub issues.
+# Instead, please report them via email to security@incigold.com or through
+# our contact form at https://incigold.com/contact
+#
+# What to Expect
+#
+# After you submit a report, we will try to confirm the issue and determine
+# its impact. We will respond within 48 hours with our assessment and next steps.
+# We will keep you informed of our progress throughout the process.
+#
+# Scope
+#
+# The following are in scope for our security program:
+# - incigold.com and all subdomains
+# - Our mobile applications
+# - Our API endpoints
+# - Our payment processing systems
+#
+# Out of Scope
+#
+# The following are not in scope:
+# - Third-party services we use
+# - Social engineering attacks
+# - Physical attacks
+# - Denial of service attacks
+#
+# Rewards
+#
+# We appreciate security researchers who help us keep our platform secure.
+# While we don't currently have a formal bug bounty program, we may offer
+# recognition or rewards for significant security improvements at our discretion.
+#
+# Legal
+#
+# We ask that you:
+# - Act in good faith
+# - Avoid privacy violations, data destruction, and service interruption
+# - Give us reasonable time to respond before public disclosure
+# - Not access or modify data that doesn't belong to you
+#
+# We will not pursue legal action against researchers who follow these guidelines.

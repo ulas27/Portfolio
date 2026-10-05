@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}İndirimli Ürünler{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-3">İndirimli Ürünler</h1>
+  {% if products.items %}
+  <div class="row g-3">
+    {% for p in products.items %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 product-card">
+        <a href="{{ url_for('shop.product_detail', slug=p.slug) }}">
+          <img src="{{ p.main_image_url }}" class="card-img-top" alt="{{ p.name }}" loading="lazy">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">{{ p.name }}</h5>
+          <div class="mb-2">
+            {% if p.compare_price and p.compare_price > p.price %}
+              <span class="text-muted text-decoration-line-through">{{ '%.2f'|format(p.compare_price) }} TL</span>
+            {% endif %}
+            <span class="fw-bold ms-2">{{ '%.2f'|format(p.price) }} TL</span>
+          </div>
+          <a href="{{ url_for('shop.product_detail', slug=p.slug) }}" class="btn btn-outline-primary mt-auto">İncele</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <nav class="mt-3">
+    <ul class="pagination">
+      {% if products.has_prev %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('shop.sale', page=products.prev_num) }}">Önceki</a></li>
+      {% endif %}
+      <li class="page-item disabled"><span class="page-link">Sayfa {{ products.page }}/{{ products.pages }}</span></li>
+      {% if products.has_next %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('shop.sale', page=products.next_num) }}">Sonraki</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% else %}
+    <div class="alert alert-info">Şu an indirimli ürün bulunmuyor.</div>
+  {% endif %}
+</div>
+{% endblock %}

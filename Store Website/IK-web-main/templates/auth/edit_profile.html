@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Profili Düzenle - İnci Gold{% endblock %}
+{% block content %}
+<div class="container" style="padding: 2rem 0; max-width: 800px;">
+  <h1>Profili Düzenle</h1>
+  <form method="POST" class="form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-row" style="display:flex; gap:1rem; flex-wrap:wrap;">
+      <div class="form-group" style="flex:1 1 280px;">
+        <label for="first_name">Ad</label>
+        <input id="first_name" name="first_name" class="form-control" type="text" value="{{ current_user.first_name or '' }}" required>
+      </div>
+      <div class="form-group" style="flex:1 1 280px;">
+        <label for="last_name">Soyad</label>
+        <input id="last_name" name="last_name" class="form-control" type="text" value="{{ current_user.last_name or '' }}" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Telefon</label>
+      <input id="phone" name="phone" class="form-control" type="tel" value="{{ current_user.phone or '' }}" placeholder="5xxxxxxxxx" pattern="[0-9]{10}" title="10 haneli telefon numarası girin (5xxxxxxxxx)">
+    </div>
+
+    <div class="form-group">
+      <label for="address">Adres</label>
+      <input id="address" name="address" class="form-control" type="text" value="{{ current_user.address or '' }}">
+    </div>
+
+    <div class="form-row" style="display:flex; gap:1rem; flex-wrap:wrap;">
+      <div class="form-group" style="flex:1 1 280px;">
+        <label for="city">Şehir</label>
+        <input id="city" name="city" class="form-control" type="text" value="{{ current_user.city or '' }}">
+      </div>
+      <div class="form-group" style="flex:1 1 280px;">
+        <label for="postal_code">Posta Kodu</label>
+        <input id="postal_code" name="postal_code" class="form-control" type="text" value="{{ current_user.postal_code or '' }}">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:.75rem; margin-top:1rem;">
+      <button type="submit" class="btn btn-primary">Kaydet</button>
+      <a href="{{ url_for('auth.profile') }}" class="btn btn-outline">Vazgeç</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

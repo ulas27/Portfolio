@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffd700;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="diamondGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f0f8ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="300" fill="#f8f9fa"/>
+  
+  <!-- Bracelet Band -->
+  <ellipse cx="150" cy="150" rx="80" ry="25" fill="url(#goldGradient)" opacity="0.9"/>
+  <ellipse cx="150" cy="150" rx="75" ry="20" fill="url(#goldGradient)"/>
+  
+  <!-- Main Gems -->
+  <circle cx="120" cy="150" r="8" fill="url(#diamondGradient)" filter="url(#glow)"/>
+  <circle cx="150" cy="150" r="10" fill="url(#diamondGradient)" filter="url(#glow)"/>
+  <circle cx="180" cy="150" r="8" fill="url(#diamondGradient)" filter="url(#glow)"/>
+  
+  <!-- Center Diamond -->
+  <polygon points="150,140 155,150 150,160 145,150" fill="url(#diamondGradient)"/>
+  <polygon points="150,140 152,147 150,154 148,147" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Side Gems -->
+  <polygon points="120,140 125,150 120,160 115,150" fill="url(#diamondGradient)"/>
+  <polygon points="180,140 185,150 180,160 175,150" fill="url(#diamondGradient)"/>
+  
+  <!-- Small Gems -->
+  <circle cx="100" cy="150" r="4" fill="url(#diamondGradient)" opacity="0.7"/>
+  <circle cx="200" cy="150" r="4" fill="url(#diamondGradient)" opacity="0.7"/>
+  <circle cx="90" cy="145" r="3" fill="url(#diamondGradient)" opacity="0.6"/>
+  <circle cx="210" cy="145" r="3" fill="url(#diamondGradient)" opacity="0.6"/>
+  
+  <!-- Clasp -->
+  <rect x="140" y="140" width="20" height="20" rx="3" fill="url(#goldGradient)" opacity="0.8"/>
+  <rect x="142" y="142" width="16" height="16" rx="2" fill="url(#diamondGradient)" opacity="0.6"/>
+  
+  <!-- Sparkles -->
+  <circle cx="110" cy="130" r="1.5" fill="#ffffff" opacity="0.8">
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="190" cy="135" r="1" fill="#ffffff" opacity="0.6">
+    <animate attributeName="opacity" values="0.2;0.8;0.2" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="130" cy="170" r="1.2" fill="#ffffff" opacity="0.7">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Luxury Text -->
+  <text x="150" y="250" text-anchor="middle" font-family="serif" font-size="14" fill="#666" opacity="0.7">LUXURY BRACELET</text>
+</svg>

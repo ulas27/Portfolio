@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+{% block title %}Yeni Kategori Ekle - Admin{% endblock %}
+{% block content %}
+<section class="container" style="padding: 2rem 0;">
+    <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Yeni Kategori Ekle</h1>
+        <a href="{{ url_for('admin.categories') }}" class="btn btn-secondary">
+            ← Geri Dön
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data" class="category-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <!-- Temel Bilgiler -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Kategori Bilgileri</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Kategori Adı <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required 
+                                   placeholder="Örn: Yüzükler, Kolyeler, Küpeler...">
+                            <small class="form-text text-muted">
+                                URL slug'ı otomatik olarak oluşturulacaktır (örn: yuzukler)
+                            </small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="description" class="form-label">Açıklama</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" 
+                                      placeholder="Kategori hakkında kısa açıklama..."></textarea>
+                            <small class="form-text text-muted">
+                                Bu açıklama kategori sayfasında gösterilecektir.
+                            </small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Durum</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
+                                <label class="form-check-label" for="is_active">
+                                    <strong>Aktif</strong> (Sitede göster)
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">
+                                Pasif kategoriler sitede görünmez. Sıralama otomatik olarak en sona eklenir.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kategori Resmi -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Kategori Resmi</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="image" class="form-label">Resim Seç</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <small class="form-text text-muted">
+                                Önerilen boyut: 400x300 piksel. Desteklenen formatlar: JPG, PNG, GIF, WebP
+                            </small>
+                        </div>
+                        
+                        <div id="imagePreview" class="mt-3"></div>
+                        <div id="selectedImages" class="mt-3" style="display: none;">
+                            <h6>Seçili Resimler:</h6>
+                            <div id="selectedImagesList"></div>
+                            <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearSelectedImages()">
+                                <i class="fas fa-trash"></i> Tümünü Kaldır
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Butonları -->
+                <div class="form-actions" style="border-top: 1px solid #eee; padding-top: 2rem; margin-top: 2rem;">
+                    <button type="submit" class="admin-btn admin-btn-primary">
+                        KATEGORİYİ KAYDET
+                    </button>
+                    <a href="{{ url_for('admin.categories') }}" class="admin-btn admin-btn-secondary ms-2">
+                        İPTAL
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Yardım Paneli -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">💡 İpuçları</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            ✅ <strong>Kategori Adı:</strong> Kısa ve açıklayıcı olsun
+                        </li>
+                        <li class="mb-2">
+                            ✅ <strong>Sıralama:</strong> Otomatik olarak en sona eklenir. Sonradan yukarı/aşağı butonları ile düzenlenebilir.
+                        </li>
+                        <li class="mb-2">
+                            ✅ <strong>Resim:</strong> Kategoriyi temsil eden kaliteli görsel seçin
+                        </li>
+                        <li class="mb-0">
+                            ✅ <strong>Açıklama:</strong> SEO için faydalı, müşteriler için bilgilendirici
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0">ℹ️ Mevcut Kategoriler</h6>
+                </div>
+                <div class="card-body">
+                    {% if categories %}
+                        <div class="mb-2">
+                            <small class="text-muted">Mevcut sıralama:</small>
+                        </div>
+                        {% for cat in categories %}
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small>{{ cat.sort_order }}. {{ cat.name }}</small>
+                                <span class="badge {% if cat.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {% if cat.is_active %}Aktif{% else %}Pasif{% endif %}
+                                </span>
+                            </div>
+                        {% endfor %}
+                        <hr>
+                        <small class="text-muted">
+                            <strong>Yeni kategori:</strong> Otomatik olarak en sona eklenir
+                        </small>
+                    {% else %}
+                        <small class="text-muted">
+                            Henüz kategori yok. İlk kategori sıra 1 olacak.
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.card {
+    border: 1px solid #e3e6f0;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+    padding: 0.75rem 1.25rem;
+}
+.form-label {
+    font-weight: 600;
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+.text-danger {
+    color: #e74a3b !important;
+}
+.text-success {
+    color: #28a745 !important;
+}
+.form-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+#imagePreview {
+    text-align: center;
+}
+.image-preview-container {
+    display: inline-block;
+    position: relative;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #f8f9fa;
+}
+.image-preview-container img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 4px;
+}
+</style>
+
+<script>
+// Resim önizleme ve seçili resimleri yönetme
+let selectedImages = [];
+
+document.getElementById('image').addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+    const preview = document.getElementById('imagePreview');
+    const selectedImagesDiv = document.getElementById('selectedImages');
+    const selectedImagesList = document.getElementById('selectedImagesList');
+    
+    // Yeni seçilen resimleri ekle
+    files.forEach(file => {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = {
+                    name: file.name,
+                    data: e.target.result,
+                    file: file
+                };
+                
+                // Aynı isimde resim varsa kaldır
+                selectedImages = selectedImages.filter(img => img.name !== file.name);
+                selectedImages.push(imageData);
+                
+                updateSelectedImagesDisplay();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+
+function updateSelectedImagesDisplay() {
+    const preview = document.getElementById('imagePreview');
+    const selectedImagesDiv = document.getElementById('selectedImages');
+    const selectedImagesList = document.getElementById('selectedImagesList');
+    
+    if (selectedImages.length > 0) {
+        selectedImagesDiv.style.display = 'block';
+        selectedImagesList.innerHTML = '';
+        
+        selectedImages.forEach((image, index) => {
+            const imageItem = document.createElement('div');
+            imageItem.className = 'd-flex align-items-center mb-2 p-2 border rounded';
+            imageItem.innerHTML = `
+                <img src="${image.data}" alt="${image.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-right: 10px;">
+                <div class="flex-grow-1">
+                    <small class="text-muted">${image.name}</small>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeSelectedImage(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            selectedImagesList.appendChild(imageItem);
+        });
+        
+        // Preview'da ilk resmi göster
+        preview.innerHTML = `
+            <div class="image-preview-container">
+                <img src="${selectedImages[0].data}" alt="Resim önizleme">
+                <div class="mt-2">
+                    <small class="text-muted">Önizleme (${selectedImages.length} resim seçili)</small>
+                </div>
+            </div>
+        `;
+    } else {
+        selectedImagesDiv.style.display = 'none';
+        preview.innerHTML = '';
+    }
+}
+
+function removeSelectedImage(index) {
+    selectedImages.splice(index, 1);
+    updateSelectedImagesDisplay();
+}
+
+function clearSelectedImages() {
+    selectedImages = [];
+    document.getElementById('image').value = '';
+    updateSelectedImagesDisplay();
+}
+
+// Kategori adından slug oluşturma (bilgilendirme amaçlı)
+document.getElementById('name').addEventListener('input', function(e) {
+    const name = e.target.value;
+    const slug = name.toLowerCase()
+        .replace(/ğ/g, 'g')
+        .replace(/ü/g, 'u')
+        .replace(/ş/g, 's')
+        .replace(/ı/g, 'i')
+        .replace(/ö/g, 'o')
+        .replace(/ç/g, 'c')
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    
+    const helpText = e.target.nextElementSibling;
+    if (slug) {
+        helpText.innerHTML = `URL slug'ı otomatik olarak oluşturulacaktır: <strong>${slug}</strong>`;
+    } else {
+        helpText.innerHTML = 'URL slug\'ı otomatik olarak oluşturulacaktır (örn: yuzukler)';
+    }
+});
+</script>
+{% endblock %}

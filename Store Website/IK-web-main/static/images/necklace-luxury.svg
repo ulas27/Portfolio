@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffd700;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="diamondGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f0f8ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="300" fill="#f8f9fa"/>
+  
+  <!-- Necklace Chain -->
+  <path d="M 50 100 Q 75 80 100 100 Q 125 120 150 100 Q 175 80 200 100 Q 225 120 250 100" 
+        stroke="url(#goldGradient)" stroke-width="3" fill="none" opacity="0.8"/>
+  
+  <!-- Pendant -->
+  <ellipse cx="150" cy="150" rx="25" ry="35" fill="url(#goldGradient)" filter="url(#glow)"/>
+  <ellipse cx="150" cy="150" rx="20" ry="30" fill="url(#diamondGradient)" opacity="0.9"/>
+  
+  <!-- Center Diamond -->
+  <polygon points="150,130 160,145 150,160 140,145" fill="url(#diamondGradient)" filter="url(#glow)"/>
+  <polygon points="150,130 155,140 150,150 145,140" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Side Gems -->
+  <circle cx="130" cy="140" r="8" fill="url(#diamondGradient)" opacity="0.7"/>
+  <circle cx="170" cy="140" r="8" fill="url(#diamondGradient)" opacity="0.7"/>
+  
+  <!-- Chain Links -->
+  <circle cx="100" cy="100" r="4" fill="url(#goldGradient)" opacity="0.6"/>
+  <circle cx="200" cy="100" r="4" fill="url(#goldGradient)" opacity="0.6"/>
+  <circle cx="75" cy="90" r="3" fill="url(#goldGradient)" opacity="0.5"/>
+  <circle cx="225" cy="90" r="3" fill="url(#goldGradient)" opacity="0.5"/>
+  
+  <!-- Sparkles -->
+  <circle cx="120" cy="120" r="1.5" fill="#ffffff" opacity="0.8">
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="180" cy="125" r="1" fill="#ffffff" opacity="0.6">
+    <animate attributeName="opacity" values="0.2;0.8;0.2" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Luxury Text -->
+  <text x="150" y="250" text-anchor="middle" font-family="serif" font-size="14" fill="#666" opacity="0.7">LUXURY NECKLACE</text>
+</svg>

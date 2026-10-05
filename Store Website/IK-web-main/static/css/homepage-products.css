@@ -1,0 +1,345 @@
+/* Homepage Product Cards - Özel Stil */
+
+/* Ana sayfa ürün kartları için özel grid */
+.homepage .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.homepage .product-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.homepage .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+.homepage .product-image {
+    position: relative;
+    overflow: hidden;
+    height: 300px;
+    background: #f8f9fa;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.homepage .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+    border-radius: 0;
+}
+
+.homepage .product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.homepage .product-info {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.homepage .product-category {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.homepage .product-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.homepage .product-name a {
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.homepage .product-name a:hover {
+    color: var(--primary-color);
+}
+
+.homepage .product-price {
+    margin-bottom: 1rem;
+}
+
+.homepage .price-current {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.homepage .price-compare {
+    font-size: 1rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 0.5rem;
+}
+
+.homepage .product-card .add-to-cart-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.homepage .product-card .add-to-cart-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Badge stilleri */
+.homepage .product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+.homepage .product-badge.sale {
+    background: #e74c3c;
+    color: white;
+}
+
+.homepage .product-badge.featured {
+    background: var(--primary-color);
+    color: white;
+}
+
+.homepage .product-badge.new {
+    background: #27ae60;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .homepage .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .homepage .product-image {
+        height: 250px;
+    }
+    
+    .homepage .product-info {
+        padding: 1rem;
+    }
+    
+    .homepage .product-name {
+        font-size: 1rem;
+    }
+    
+    .homepage .price-current {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .homepage .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .homepage .product-image {
+        height: 280px;
+    }
+}
+
+/* New Arrivals Slider - Kompakt kartlar */
+.new-arrivals {
+    margin: 4rem 0;
+}
+
+.product-slider {
+    position: relative;
+    overflow: hidden;
+    margin: 2rem 0;
+}
+
+.slider-container {
+    overflow: hidden;
+    position: relative;
+}
+
+.slider-track {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.5s ease;
+    will-change: transform;
+}
+
+.product-slide {
+    flex: 0 0 auto;
+    width: auto;
+}
+
+.new-arrivals .product-slide .product-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.new-arrivals .product-slide .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+.new-arrivals .product-slide .product-image {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    display: block;
+    background: #f8f9fa;
+}
+
+.new-arrivals .product-slide .product-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+}
+
+.new-arrivals .product-slide .product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.new-arrivals .product-slide .product-info {
+    padding: 1rem 1.5rem 1.5rem;
+    text-align: center;
+    width: 100%;
+}
+
+.new-arrivals .product-slide .product-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.new-arrivals .product-slide .product-name a {
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.new-arrivals .product-slide .product-name a:hover {
+    color: var(--primary-color);
+}
+
+.new-arrivals .product-slide .product-price {
+    margin-bottom: 0;
+}
+
+.new-arrivals .product-slide .price-current {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.new-arrivals .product-slide .price-compare {
+    font-size: 0.9rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 0.5rem;
+}
+
+.new-arrivals .product-slide .product-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+.new-arrivals .product-slide .product-badge.new {
+    background: #27ae60;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .new-arrivals .product-slide .product-card {
+        width: 250px;
+    }
+    
+    .new-arrivals .product-slide .product-info {
+        padding: 0.75rem 1rem 1rem;
+    }
+    
+    .new-arrivals .product-slide .product-name {
+        font-size: 0.95rem;
+    }
+    
+    .new-arrivals .product-slide .price-current {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-arrivals .product-slide .product-card {
+        width: 200px;
+    }
+    
+    .slider-track {
+        gap: 1rem;
+    }
+}

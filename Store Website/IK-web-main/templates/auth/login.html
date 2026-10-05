@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Giriş Yap - İnci Gold{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Giriş Yap</h2>
+            <p>Hesabınıza giriş yapın</p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="form-group">
+                <label for="email">E-posta Adresi</label>
+                <input type="email" id="email" name="email" required 
+                       value="{{ request.form.email or '' }}"
+                       class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" name="password" required 
+                       class="form-control">
+            </div>
+            
+            <div class="form-group form-check">
+                <input type="checkbox" id="remember_me" name="remember_me" 
+                       class="form-check-input">
+                <label for="remember_me" class="form-check-label">
+                    Beni hatırla
+                </label>
+            </div>
+            
+            <!-- reCAPTCHA v3 -->
+            {% if config.RECAPTCHA_PUBLIC_KEY %}
+            <div class="form-group">
+                <div class="g-recaptcha" 
+                     data-sitekey="{{ config.RECAPTCHA_PUBLIC_KEY }}"
+                     data-callback="onRecaptchaSuccess"
+                     data-expired-callback="onRecaptchaExpired"
+                     data-size="invisible">
+                </div>
+            </div>
+            {% endif %}
+            
+            <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+                Giriş Yap
+            </button>
+        </form>
+        
+        <div class="auth-links">
+            <p>
+                <a href="{{ url_for('auth.forgot_password') }}">Şifremi unuttum</a>
+            </p>
+            <p>
+                Hesabınız yok mu? 
+                <a href="{{ url_for('auth.register') }}"> Kayıt olun</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if config.RECAPTCHA_PUBLIC_KEY %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+function onRecaptchaSuccess(token) {
+    // reCAPTCHA token is automatically added to form
+    document.querySelector('form').submit();
+}
+
+function onRecaptchaExpired() {
+    // Handle expired reCAPTCHA
+    console.log('reCAPTCHA expired');
+}
+
+// Prevent form submission until reCAPTCHA is ready
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        {% if config.RECAPTCHA_PUBLIC_KEY %}
+        // Execute reCAPTCHA
+        grecaptcha.execute();
+        {% else %}
+        // Submit form directly if reCAPTCHA not configured
+        form.submit();
+        {% endif %}
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

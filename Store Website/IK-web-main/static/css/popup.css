@@ -1,0 +1,178 @@
+/* Cart Success Popup */
+.cart-success-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: var(--primary-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-color);
+    transform: translateX(400px) scale(0.8);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    max-width: 350px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.cart-success-popup.show {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+
+/* Popup bounce animation */
+.cart-success-popup.show {
+    animation: popupBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes popupBounce {
+    0% {
+        transform: translateX(400px) scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: translateX(-10px) scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.cart-success-content {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+    position: relative;
+    color: white;
+}
+
+.cart-success-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cart-success-icon {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-success-text {
+    flex: 1;
+}
+
+.cart-success-text h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cart-success-text p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    line-height: 1.4;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+}
+
+
+.cart-success-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: var(--text-light);
+    font-size: 16px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.cart-success-close:hover {
+    background: #f8f9fa;
+    color: var(--text-color);
+}
+
+/* Progress bar */
+.cart-success-popup::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2c2c2c, #1a1a1a);
+    border-radius: 0 0 12px 12px;
+    animation: progressBar 3s linear forwards;
+}
+
+@keyframes progressBar {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .cart-success-popup {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        transform: translateY(-100px);
+    }
+    
+    .cart-success-popup.show {
+        transform: translateY(0);
+    }
+    
+    .cart-success-content {
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+    
+    .cart-success-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .cart-success-icon i {
+        font-size: 14px;
+    }
+    
+    .cart-success-text h4 {
+        font-size: 0.9rem;
+    }
+    
+    .cart-success-text p {
+        font-size: 0.8rem;
+    }
+}

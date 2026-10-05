@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Siparişler - Admin{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-3">Siparişler</h1>
+  {% if orders.items %}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Kullanıcı</th>
+          <th>Tutar</th>
+          <th>Durum</th>
+          <th>Ödeme</th>
+          <th>Tarih</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in orders.items %}
+        <tr>
+          <td>#{{ o.id }}</td>
+          <td>{{ o.user.email if o.user else '-' }}</td>
+          <td>{{ '%.2f'|format(o.total_amount or 0) }} TL</td>
+          <td><span class="badge bg-info">{{ o.status }}</span></td>
+          <td><span class="badge bg-{{ 'success' if o.payment_status == 'paid' else 'secondary' }}">{{ o.payment_status }}</span></td>
+          <td>{{ o.created_at.strftime('%Y-%m-%d %H:%M') if o.created_at else '' }}</td>
+          <td>
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.order_detail', order_id=o.id) }}">Detay</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <nav>
+    <ul class="pagination">
+      {% if orders.has_prev %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('admin.orders', page=orders.prev_num) }}">Önceki</a></li>
+      {% endif %}
+      <li class="page-item disabled"><span class="page-link">Sayfa {{ orders.page }}/{{ orders.pages }}</span></li>
+      {% if orders.has_next %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('admin.orders', page=orders.next_num) }}">Sonraki</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% else %}
+    <div class="alert alert-info">Sipariş yok.</div>
+  {% endif %}
+</div>
+{% endblock %}

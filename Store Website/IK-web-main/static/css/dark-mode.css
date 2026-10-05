@@ -1,0 +1,294 @@
+/* Dark Mode Theme - Luxury Jewelry */
+[data-theme="dark"] {
+    --primary-color: #ffffff;
+    --primary-dark: #e0e0e0;
+    --secondary-color: #cccccc;
+    --accent-color: #d4af37;
+    --text-color: #ffffff;
+    --text-light: #cccccc;
+    --text-muted: #999999;
+    --bg-color: #0a0a0a;
+    --bg-light: #1a1a1a;
+    --bg-dark: #000000;
+    --border-color: #333333;
+    --shadow: 0 4px 20px rgba(0,0,0,0.3);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+    
+    /* Dark mode luxury accents */
+    --gold-accent: #ffd700;
+    --silver-accent: #e8e8e8;
+    --diamond-accent: #87ceeb;
+    --warm-gray: #2a2a2a;
+    --cool-gray: #1f1f1f;
+}
+
+/* Dark mode body */
+[data-theme="dark"] body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Dark mode navigation */
+[data-theme="dark"] .navbar {
+    background: rgba(10, 10, 10, 0.95);
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .nav-link {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .nav-link:hover {
+    color: var(--accent-color);
+}
+
+/* Dark mode cards */
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .category-card,
+[data-theme="dark"] .faq-item {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .product-card:hover,
+[data-theme="dark"] .category-card:hover,
+[data-theme="dark"] .faq-item:hover {
+    background: var(--warm-gray);
+    border-color: var(--accent-color);
+}
+
+/* Dark mode buttons */
+[data-theme="dark"] .btn-primary {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--bg-color);
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background: var(--gold-accent);
+    border-color: var(--gold-accent);
+}
+
+[data-theme="dark"] .btn-outline {
+    background: transparent;
+    border-color: var(--text-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .btn-outline:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Dark mode forms */
+[data-theme="dark"] .form-control {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .form-control:focus {
+    border-color: var(--accent-color);
+    background: var(--warm-gray);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--text-muted);
+}
+
+/* Dark mode hero section */
+[data-theme="dark"] .hero {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+}
+
+[data-theme="dark"] .hero-title {
+    color: var(--text-color);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] .hero-subtitle {
+    color: var(--text-light);
+}
+
+/* Dark mode sections */
+[data-theme="dark"] .features {
+    background: var(--bg-light);
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .feature-item {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .feature-item h3 {
+    color: var(--accent-color);
+}
+
+/* Dark mode categories */
+[data-theme="dark"] .categories-section {
+    background: var(--bg-color);
+}
+
+[data-theme="dark"] .section-title {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .section-subtitle {
+    color: var(--text-light);
+}
+
+/* Dark mode about section */
+[data-theme="dark"] .about-section {
+    background: var(--bg-light);
+}
+
+[data-theme="dark"] .stat-item {
+    background: var(--warm-gray);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .stat-number {
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] .stat-label {
+    color: var(--text-light);
+}
+
+/* Dark mode FAQ */
+[data-theme="dark"] .faq-section {
+    background: var(--bg-light);
+    border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .faq-question h3 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .faq-answer p {
+    color: var(--text-light);
+}
+
+/* Dark mode newsletter */
+[data-theme="dark"] .newsletter-section {
+    background: var(--bg-color);
+    border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .newsletter-text h2 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .newsletter-text p {
+    color: var(--text-light);
+}
+
+/* Dark mode footer */
+[data-theme="dark"] .footer {
+    background: var(--bg-dark);
+    border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .footer-section h4 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .footer-section a {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .footer-section a:hover {
+    color: var(--accent-color);
+}
+
+/* Dark mode popup */
+[data-theme="dark"] .cart-success-popup {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .cart-success-text h4 {
+    color: var(--accent-color);
+}
+
+[data-theme="dark"] .cart-success-text p {
+    color: var(--text-light);
+}
+
+/* Dark mode WhatsApp */
+[data-theme="dark"] .whatsapp-section {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+[data-theme="dark"] .whatsapp-float {
+    background: #25D366;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+}
+
+/* Dark mode scroll animations */
+[data-theme="dark"] .scroll-animate {
+    color: var(--text-color);
+}
+
+/* Dark mode loading */
+[data-theme="dark"] .loading-spinner {
+    border-color: var(--border-color);
+    border-top-color: var(--accent-color);
+}
+
+/* Dark mode responsive */
+@media (max-width: 768px) {
+    [data-theme="dark"] .navbar {
+        background: rgba(10, 10, 10, 0.98);
+    }
+    
+    [data-theme="dark"] .hero {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    }
+}
+
+/* Dark mode toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .theme-toggle {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.theme-toggle i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover i {
+    transform: rotate(180deg);
+}
+
+/* Dark mode transition */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

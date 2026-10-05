@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Profilim - İnci Gold{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="profile-container">
+    <div class="profile-header">
+      <h1>Profilim</h1>
+    </div>
+
+    <div class="profile-content">
+      <div class="profile-info">
+        <h3 style="font-weight: normal;">Kişisel Bilgiler</h3>
+        <div class="profile-detail">
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Ad Soyad</span>
+            <span class="profile-detail-value">{{ current_user.first_name }} {{ current_user.last_name }}</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Kullanıcı Adı</span>
+            <span class="profile-detail-value">{{ current_user.username }}</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">E-posta</span>
+            <span class="profile-detail-value">{{ current_user.email }}</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Telefon</span>
+            <span class="profile-detail-value">{{ current_user.phone or 'Belirtilmemiş' }}</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Adres</span>
+            <span class="profile-detail-value">{{ current_user.address or 'Belirtilmemiş' }}</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Şehir</span>
+            <span class="profile-detail-value">{{ current_user.city or 'Belirtilmemiş' }}</span>
+          </div>
+          <div class="profile-detail-item">
+            <span class="profile-detail-label">Posta Kodu</span>
+            <span class="profile-detail-value">{{ current_user.postal_code or 'Belirtilmemiş' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-actions">
+        <h3 style="font-weight: normal;">Hızlı İşlemler</h3>
+        <div class="profile-actions-grid">
+          <a href="{{ url_for('auth.edit_profile') }}" class="profile-action-btn profile-action-btn-secondary">
+            Profili Düzenle
+          </a>
+          <a href="{{ url_for('auth.change_password') }}" class="profile-action-btn profile-action-btn-secondary">
+            Şifre Değiştir
+          </a>
+          <a href="{{ url_for('auth.orders') }}" class="profile-action-btn profile-action-btn-secondary">
+            Siparişlerim
+          </a>
+          {% if current_user.is_admin %}
+          <a href="{{ url_for('admin.dashboard') }}" class="profile-action-btn profile-action-btn-success">
+            Admin Paneli
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

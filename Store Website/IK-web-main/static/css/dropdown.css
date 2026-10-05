@@ -1,0 +1,178 @@
+/* Modern Dropdown Menu */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 250px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    backdrop-filter: blur(10px);
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Add delay before hiding */
+    transition-delay: 0.1s;
+}
+
+.dropdown.active .dropdown-content {
+    display: block;
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+/* Prevent dropdown from disappearing when moving mouse down */
+.dropdown-content {
+    pointer-events: auto;
+}
+
+.dropdown:hover .dropdown-content {
+    pointer-events: auto;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.dropdown-content a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    transition: left 0.5s;
+}
+
+.dropdown-content a:hover::before {
+    left: 100%;
+}
+
+.dropdown-content a:hover {
+    background: var(--bg-light);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    transform: translateX(5px);
+    padding-left: 25px;
+}
+
+.dropdown-content a:first-child {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.dropdown-content a:last-child {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Tüm Ürünler özel stili */
+.dropdown-item-all {
+    background: #f8f9fa !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+    border-top: 1px solid #dee2e6 !important;
+    border-bottom: none !important;
+}
+
+.dropdown-item-all:hover {
+    background: var(--primary-color) !important;
+    color: white !important;
+    transform: translateX(5px) !important;
+}
+
+/* Dropdown bar effect - same as other nav links */
+.dropdown .nav-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.dropdown .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.dropdown:hover .nav-link::after,
+.dropdown.active .nav-link::after {
+    width: 100%;
+}
+
+/* Responsive dropdown */
+@media (max-width: 768px) {
+    .dropdown-content {
+        position: static;
+        display: none;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        background: var(--bg-light);
+        margin: 0;
+        padding: 0;
+        transform: none;
+        opacity: 1;
+    }
+    
+    .dropdown:hover .dropdown-content {
+        display: block;
+        transform: none;
+    }
+    
+    .dropdown-content a {
+        padding: 10px 20px;
+        border-left: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .dropdown-content a:hover {
+        transform: none;
+        padding-left: 20px;
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .dropdown-content a:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Dark mode support */
+[data-theme="dark"] .dropdown-content {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .dropdown-content a {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .dropdown-content a:hover {
+    background: var(--primary-color);
+    color: white;
+}

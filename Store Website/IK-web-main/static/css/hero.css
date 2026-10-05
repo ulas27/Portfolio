@@ -1,0 +1,203 @@
+/* Hero Section - Luxury Jewelry Style */
+.hero {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(248, 249, 250, 0.7) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(240, 240, 240, 0.7) 100%), 
+                url('../images/banner.jpg') center/cover no-repeat;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="diamonds" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23e5e5e5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23diamonds)"/></svg>');
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    width: 100%;
+}
+
+.hero-text {
+    max-width: 600px;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    color: #000000;
+    margin-bottom: 1rem;
+    font-weight: 400;
+    line-height: 1.1;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    letter-spacing: 0.5px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-buttons .btn {
+    border-radius: 0 !important;
+    padding: 12px 24px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-discover-btn {
+    background: #000000 !important;
+    color: white !important;
+    border: 1px solid #000000 !important;
+    padding: 12px 24px !important;
+    font-size: 0.9rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    min-width: auto !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+}
+
+.hero-discover-btn:hover {
+    background: #333333 !important;
+    color: white !important;
+    border-color: #333333 !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+/* Jewelry Showcase */
+.hero-visual {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.jewelry-showcase {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.jewelry-item {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: float 3s ease-in-out infinite;
+}
+
+.jewelry-item-1 {
+    top: 20px;
+    left: 50px;
+    animation-delay: 0s;
+}
+
+.jewelry-item-2 {
+    top: 80px;
+    right: 50px;
+    animation-delay: 1s;
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    box-shadow: 0 8px 25px rgba(192, 192, 192, 0.3);
+}
+
+.jewelry-item-3 {
+    bottom: 20px;
+    left: 120px;
+    animation-delay: 2s;
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+}
+
+.jewelry-sparkle {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .jewelry-showcase {
+        width: 250px;
+        height: 150px;
+    }
+    
+    .jewelry-item {
+        width: 50px;
+        height: 50px;
+    }
+}

@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+{% block title %}Manuel Satış - İnci Gold Admin{% endblock %}
+{% block content %}
+<section class="container" style="padding:2rem 0;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Manuel Satış Girişi</h1>
+    <a href="{{ url_for('admin.dashboard') }}" class="admin-btn admin-btn-secondary">GERİ DÖN</a>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST" id="manualSaleForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <!-- Ürün Bilgileri -->
+            <div class="mb-4" id="products-container">
+              <h5 class="text-primary mb-3">Ürün Bilgileri</h5>
+              
+              <div class="product-form" data-product-index="0">
+                <div class="product-card" style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; background: #fff;">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0" style="color: #333; font-weight: 600;">Ürün 1</h6>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-product" style="display:none; padding: 0.25rem 0.5rem;">
+                      <i class="fas fa-times"></i> Kaldır
+                    </button>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-md-8 mb-3">
+                      <label for="product_name_0" class="form-label" style="font-weight: 500; color: #555;">Ürün Adı *</label>
+                      <input type="text" class="form-control" id="product_name_0" name="products[0][product_name]" 
+                             required placeholder="Örn: Altın Yüzük" style="border-radius: 6px; border: 1px solid #ddd;">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label for="quantity_0" class="form-label" style="font-weight: 500; color: #555;">Adet</label>
+                      <input type="number" class="form-control" id="quantity_0" name="products[0][quantity]" 
+                             value="1" min="1" onchange="calculateProductTotal(0)" style="border-radius: 6px; border: 1px solid #ddd;">
+                    </div>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="product_description_0" class="form-label" style="font-weight: 500; color: #555;">Ürün Açıklaması</label>
+                    <textarea class="form-control" id="product_description_0" name="products[0][product_description]" 
+                              rows="2" placeholder="Ürün hakkında detaylı bilgi..." style="border-radius: 6px; border: 1px solid #ddd;"></textarea>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="unit_price_0" class="form-label" style="font-weight: 500; color: #555;">Birim Fiyat (₺) *</label>
+                      <input type="number" class="form-control" id="unit_price_0" name="products[0][unit_price]" 
+                             required step="0.01" min="0" onchange="calculateProductTotal(0)" placeholder="0.00" style="border-radius: 6px; border: 1px solid #ddd;">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="product_total_0" class="form-label" style="font-weight: 500; color: #555;">Toplam Tutar (₺)</label>
+                      <input type="number" class="form-control" id="product_total_0" name="products[0][total_amount]" 
+                             readonly style="background-color: #f8f9fa; border-radius: 6px; border: 1px solid #ddd; font-weight: 600; color: #28a745;">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="text-center mb-3">
+                <button type="button" class="btn btn-outline-primary" onclick="addProduct()" 
+                        style="padding: 0.75rem 1.5rem; font-weight: 600;">
+                  + ÜRÜN EKLE
+                </button>
+              </div>
+            </div>
+
+            <!-- Boşluk -->
+            <div style="margin-bottom: 2rem;"></div>
+
+            <!-- Müşteri Bilgileri -->
+            <div class="mb-4" style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; background: #fff;">
+              <h5 class="text-success mb-3" style="font-weight: 600;">Müşteri Bilgileri</h5>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="customer_name" class="form-label" style="font-weight: 500; color: #555;">Müşteri Adı</label>
+                  <input type="text" class="form-control" id="customer_name" name="customer_name" 
+                         placeholder="Ad Soyad" style="border-radius: 6px; border: 1px solid #ddd;">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="customer_tc" class="form-label" style="font-weight: 500; color: #555;">TC Kimlik No</label>
+                  <input type="text" class="form-control" id="customer_tc" name="customer_tc" 
+                         maxlength="11" placeholder="12345678901" oninput="validateTC(this)" style="border-radius: 6px; border: 1px solid #ddd;">
+                  <small class="text-muted">11 haneli TC numarası (son hane çift olmalı)</small>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="customer_phone" class="form-label" style="font-weight: 500; color: #555;">Telefon</label>
+                  <input type="tel" class="form-control" id="customer_phone" name="customer_phone" 
+                         placeholder="0555 123 45 67" style="border-radius: 6px; border: 1px solid #ddd;">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="customer_email" class="form-label" style="font-weight: 500; color: #555;">E-posta</label>
+                  <input type="email" class="form-control" id="customer_email" name="customer_email" 
+                         placeholder="ornek@email.com" style="border-radius: 6px; border: 1px solid #ddd;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Satış Bilgileri -->
+            <div class="mb-4" style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; background: #fff;">
+              <h5 class="text-warning mb-3" style="font-weight: 600;">Satış Bilgileri</h5>
+              
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="grand_total" class="form-label" style="font-weight: 500; color: #555;">Genel Toplam (₺)</label>
+                  <input type="number" class="form-control" id="grand_total" name="grand_total" 
+                         readonly style="background-color: #f8f9fa; font-weight: bold; font-size: 1.2em; color: #28a745; border-radius: 6px; border: 1px solid #ddd;">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="payment_method" class="form-label" style="font-weight: 500; color: #555;">Ödeme Yöntemi</label>
+                  <select class="form-control" id="payment_method" name="payment_method" style="border-radius: 6px; border: 1px solid #ddd;">
+                    <option value="Nakit">Nakit</option>
+                    <option value="Kredi Kartı">Kredi Kartı</option>
+                    <option value="Havale">Havale</option>
+                    <option value="EFT">EFT</option>
+                    <option value="Çek">Çek</option>
+                    <option value="Diğer">Diğer</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="sale_date" class="form-label" style="font-weight: 500; color: #555;">Satış Tarihi</label>
+                  <input type="date" class="form-control" id="sale_date" name="sale_date" style="border-radius: 6px; border: 1px solid #ddd;">
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="notes" class="form-label" style="font-weight: 500; color: #555;">Notlar</label>
+                <textarea class="form-control" id="notes" name="notes" rows="3" 
+                          placeholder="Satış hakkında özel notlar..." style="border-radius: 6px; border: 1px solid #ddd;"></textarea>
+              </div>
+            </div>
+
+            <!-- Butonlar -->
+            <div class="d-flex gap-2 justify-content-center" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e9ecef;">
+              <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem; font-weight: 600; background-color: #000; border-color: #000; color: #fff;">
+                SATIŞI KAYDET
+              </button>
+              <a href="{{ url_for('admin.sales_history') }}" class="btn btn-outline-primary" style="padding: 0.75rem 2rem; font-weight: 600; border-color: #000; color: #000;">
+                GEÇMİŞ SATIŞLAR
+              </a>
+              <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary" style="padding: 0.75rem 2rem; font-weight: 600; border-color: #000; color: #000;">
+                İPTAL
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+let productCount = 1;
+
+// TC Kimlik No validasyonu
+function validateTC(input) {
+  const tc = input.value.replace(/\D/g, ''); // Sadece rakamları al
+  input.value = tc; // Sadece rakamları göster
+  
+  if (tc.length === 11) {
+    const lastDigit = parseInt(tc[10]);
+    if (lastDigit % 2 === 0) {
+      input.classList.remove('is-invalid');
+      input.classList.add('is-valid');
+    } else {
+      input.classList.remove('is-valid');
+      input.classList.add('is-invalid');
+    }
+  } else if (tc.length > 0) {
+    input.classList.remove('is-valid');
+    input.classList.add('is-invalid');
+  } else {
+    input.classList.remove('is-valid', 'is-invalid');
+  }
+}
+
+// Ürün toplamını hesapla
+function calculateProductTotal(index) {
+  const quantity = parseFloat(document.getElementById(`quantity_${index}`).value) || 0;
+  const unitPrice = parseFloat(document.getElementById(`unit_price_${index}`).value) || 0;
+  const total = quantity * unitPrice;
+  
+  document.getElementById(`product_total_${index}`).value = total.toFixed(2);
+  calculateGrandTotal();
+}
+
+// Genel toplamı hesapla
+function calculateGrandTotal() {
+  let grandTotal = 0;
+  const productForms = document.querySelectorAll('.product-form');
+  
+  productForms.forEach((form, index) => {
+    const totalInput = document.getElementById(`product_total_${index}`);
+    if (totalInput && totalInput.value) {
+      grandTotal += parseFloat(totalInput.value) || 0;
+    }
+  });
+  
+  document.getElementById('grand_total').value = grandTotal.toFixed(2);
+}
+
+// Yeni ürün ekle
+function addProduct() {
+  const container = document.getElementById('products-container');
+  const productForms = document.querySelectorAll('.product-form');
+  const newIndex = productCount;
+  
+  const newProductHTML = `
+    <div class="product-form" data-product-index="${newIndex}">
+      <div class="product-card" style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; background: #fff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0" style="color: #333; font-weight: 600;">Ürün ${newIndex + 1}</h6>
+          <button type="button" class="btn btn-sm btn-outline-danger remove-product" onclick="removeProduct(${newIndex})" style="padding: 0.25rem 0.5rem;">
+            <i class="fas fa-times"></i> Kaldır
+          </button>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-8 mb-3">
+            <label for="product_name_${newIndex}" class="form-label" style="font-weight: 500; color: #555;">Ürün Adı *</label>
+            <input type="text" class="form-control" id="product_name_${newIndex}" name="products[${newIndex}][product_name]" 
+                   required placeholder="Örn: Altın Yüzük" style="border-radius: 6px; border: 1px solid #ddd;">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="quantity_${newIndex}" class="form-label" style="font-weight: 500; color: #555;">Adet</label>
+            <input type="number" class="form-control" id="quantity_${newIndex}" name="products[${newIndex}][quantity]" 
+                   value="1" min="1" onchange="calculateProductTotal(${newIndex})" style="border-radius: 6px; border: 1px solid #ddd;">
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="product_description_${newIndex}" class="form-label" style="font-weight: 500; color: #555;">Ürün Açıklaması</label>
+          <textarea class="form-control" id="product_description_${newIndex}" name="products[${newIndex}][product_description]" 
+                    rows="2" placeholder="Ürün hakkında detaylı bilgi..." style="border-radius: 6px; border: 1px solid #ddd;"></textarea>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="unit_price_${newIndex}" class="form-label" style="font-weight: 500; color: #555;">Birim Fiyat (₺) *</label>
+            <input type="number" class="form-control" id="unit_price_${newIndex}" name="products[${newIndex}][unit_price]" 
+                   required step="0.01" min="0" onchange="calculateProductTotal(${newIndex})" placeholder="0.00" style="border-radius: 6px; border: 1px solid #ddd;">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="product_total_${newIndex}" class="form-label" style="font-weight: 500; color: #555;">Toplam Tutar (₺)</label>
+            <input type="number" class="form-control" id="product_total_${newIndex}" name="products[${newIndex}][total_amount]" 
+                   readonly style="background-color: #f8f9fa; border-radius: 6px; border: 1px solid #ddd; font-weight: 600; color: #28a745;">
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Ürün ekle butonundan önce ekle
+  const addButton = container.querySelector('.text-center');
+  addButton.insertAdjacentHTML('beforebegin', newProductHTML);
+  
+  productCount++;
+  updateRemoveButtons();
+  updateProductNumbers();
+}
+
+// Ürün sil
+function removeProduct(index) {
+  const productForm = document.querySelector(`[data-product-index="${index}"]`);
+  if (productForm) {
+    productForm.remove();
+    calculateGrandTotal();
+    updateRemoveButtons();
+    updateProductNumbers();
+  }
+}
+
+// Sil butonlarını güncelle (sadece 1'den fazla ürün varsa göster)
+function updateRemoveButtons() {
+  const productForms = document.querySelectorAll('.product-form');
+  const removeButtons = document.querySelectorAll('.remove-product');
+  
+  removeButtons.forEach((button, index) => {
+    // İlk ürün (index 0) için buton gösterme, diğerleri için göster
+    if (productForms.length > 1 && index > 0) {
+      button.style.display = 'inline-block';
+    } else {
+      button.style.display = 'none';
+    }
+  });
+}
+
+// Ürün numaralarını güncelle
+function updateProductNumbers() {
+  const productForms = document.querySelectorAll('.product-form');
+  
+  productForms.forEach((form, index) => {
+    const title = form.querySelector('h6');
+    if (title) {
+      title.textContent = `Ürün ${index + 1}`;
+    }
+  });
+}
+
+// Sayfa yüklendiğinde bugünün tarihini set et
+document.addEventListener('DOMContentLoaded', function() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('sale_date').value = today;
+  
+  // İlk hesaplama
+  calculateProductTotal(0);
+  updateRemoveButtons();
+  updateProductNumbers();
+});
+
+// Form gönderilmeden önce sadece temel kontrol
+document.getElementById('manualSaleForm').addEventListener('submit', function(e) {
+  const productForms = document.querySelectorAll('.product-form');
+  let hasValidProduct = false;
+  
+  productForms.forEach((form, index) => {
+    const productName = document.getElementById(`product_name_${index}`).value.trim();
+    const unitPrice = parseFloat(document.getElementById(`unit_price_${index}`).value);
+    
+    if (productName && unitPrice > 0) {
+      hasValidProduct = true;
+    }
+  });
+  
+  if (!hasValidProduct) {
+    e.preventDefault();
+    alert('En az bir ürün için ürün adı ve geçerli bir fiyat girin.');
+    return false;
+  }
+  
+  // TC ve diğer validasyonları backend'e bırak
+  // Bu sayede popup sistemi çalışacak
+});
+</script>
+{% endblock %}

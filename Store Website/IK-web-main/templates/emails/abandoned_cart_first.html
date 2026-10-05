@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepetinizde Unuttuğunuz Ürünler Var!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #d4af37;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+        .cart-items {
+            margin: 30px 0;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #ecf0f1;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+        }
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            font-size: 16px;
+            color: #d4af37;
+            font-weight: bold;
+        }
+        .item-quantity {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .total-section {
+            background-color: #d4af37;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .total-label {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .total-amount {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #d4af37;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #b8941f;
+        }
+        .benefits {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        .benefits h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .benefit-icon {
+            color: #d4af37;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .unsubscribe {
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        .unsubscribe a {
+            color: #7f8c8d;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">İnci Gold</div>
+            <h1 class="title">Sepetinizde Unuttuğunuz Ürünler Var!</h1>
+            <p class="subtitle">Değerli müşterimiz, sepetinizde bekleyen güzel ürünlerimiz var. Kaçırmayın!</p>
+        </div>
+
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ item.product.image_url or '/static/images/no-image.jpg' }}" 
+                     alt="{{ item.product.name }}" class="item-image">
+                <div class="item-details">
+                    <div class="item-name">{{ item.product.name }}</div>
+                    <div class="item-price">{{ "%.2f"|format(item.product.price) }} ₺</div>
+                    <div class="item-quantity">Adet: {{ item.quantity }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="total-section">
+            <div class="total-label">Toplam Sepet Tutarı</div>
+            <div class="total-amount">{{ "%.2f"|format(total_value) }} ₺</div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{{ recovery_url }}" class="cta-button">Sepetimi Tamamla</a>
+        </div>
+
+        <div class="benefits">
+            <h3>Neden İnci Gold'u Tercih Etmelisiniz?</h3>
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <span>Ücretsiz kargo ve hızlı teslimat</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <span>Güvenli ödeme ve 3D Secure</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <span>30 gün iade garantisi</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">✓</span>
+                <span>Kaliteli ve orijinal ürünler</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>İnci Gold</strong><br>
+            Değirmiçem, Gazi Muhtar Paşa Blv. No:31, 27090 Şehitkamil/Gaziantep, Türkiye<br>
+            +90 546 899 27 17 | info@incigold.com</p>
+            
+            <div class="unsubscribe">
+                <a href="{{ unsubscribe_url }}">Bu e-postaları almak istemiyorum</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

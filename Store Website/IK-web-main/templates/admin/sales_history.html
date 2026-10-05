@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% block title %}Geçmiş Satışlar - İnci Gold Admin{% endblock %}
+{% block content %}
+<section class="container" style="padding:2rem 0;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Geçmiş Satışlar</h1>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('admin.manual_sale') }}" class="admin-btn admin-btn-primary">
+        <i class="fas fa-plus"></i> YENİ SATIŞ
+      </a>
+      <a href="{{ url_for('admin.dashboard') }}" class="admin-btn admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i> GERİ DÖN
+      </a>
+    </div>
+  </div>
+
+  <!-- İstatistik Kartları -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title text-primary">Toplam Manuel Satış</h5>
+          <h3 class="text-primary">{{ total_manual_sales }}</h3>
+          <small class="text-muted">Adet</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title text-success">Toplam Manuel Gelir</h5>
+          <h3 class="text-success">₺{{ "%.2f"|format(total_manual_revenue) }}</h3>
+          <small class="text-muted">Türk Lirası</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Satışlar Listesi -->
+  <div class="card" style="border-radius: 8px; border: 1px solid #e9ecef;">
+    <div class="card-header" style="background: #f8f9fa; border-bottom: 1px solid #e9ecef;">
+      <h5 class="mb-0" style="font-weight: 600; color: #333;">Detaylar</h5>
+    </div>
+    <div class="card-body">
+      {% if manual_sales.items %}
+        <div class="table-responsive">
+          <table class="table table-hover" style="border-collapse: separate; border-spacing: 0;">
+            <thead class="table-light">
+              <tr>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Tarih</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Ürün</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Müşteri</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Adet</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Birim Fiyat</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Toplam</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Ödeme</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">Kaydeden</th>
+                <th style="padding: 1rem 0.75rem; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057;">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sale in manual_sales.items %}
+              <tr style="border-bottom: 1px solid #dee2e6;">
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <div class="small" style="font-weight: 500;">{{ sale.sale_date.strftime('%d.%m.%Y') }}</div>
+                  <div class="small text-muted">{{ sale.sale_date.strftime('%H:%M') }}</div>
+                </td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <div class="fw-bold" style="color: #333;">{{ sale.product_name }}</div>
+                  {% if sale.product_description %}
+                    <div class="small text-muted" style="max-width:200px; overflow:hidden; text-overflow:ellipsis;">
+                      {{ sale.product_description[:50] }}{% if sale.product_description|length > 50 %}...{% endif %}
+                    </div>
+                  {% endif %}
+                </td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <div class="fw-bold" style="color: #333;">{{ sale.customer_name or 'Anonim' }}</div>
+                  {% if sale.customer_phone %}
+                    <div class="small text-muted">{{ sale.customer_phone }}</div>
+                  {% endif %}
+                  {% if sale.customer_tc %}
+                    <div class="small text-muted">TC: {{ sale.customer_tc }}</div>
+                  {% endif %}
+                </td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <span class="badge" style="background-color: #17a2b8; color: white; padding: 0.5rem 0.75rem; border-radius: 6px; font-weight: 500;">{{ sale.quantity }}</span>
+                </td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle; font-weight: 500; color: #333;">₺{{ "%.2f"|format(sale.unit_price) }}</td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <strong style="color: #28a745; font-size: 1.1em;">₺{{ "%.2f"|format(sale.total_amount) }}</strong>
+                </td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <span class="badge" style="{% if sale.payment_method == 'Nakit' %}background-color: #28a745;{% elif sale.payment_method == 'Kredi Kartı' %}background-color: #007bff;{% else %}background-color: #6c757d;{% endif %} color: white; padding: 0.5rem 0.75rem; border-radius: 6px; font-weight: 500;">
+                    {{ sale.payment_method }}
+                  </span>
+                </td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <div class="small" style="font-weight: 500; color: #333;">{{ sale.creator.first_name }} {{ sale.creator.last_name }}</div>
+                  <div class="small text-muted">{{ sale.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                </td>
+                <td style="padding: 1rem 0.75rem; vertical-align: middle;">
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sm" 
+                            onclick="showSaleDetails({{ sale.id }}, '{{ sale.product_name|e }}', '{{ sale.customer_name or 'Anonim'|e }}', '{{ sale.customer_tc or ''|e }}', '{{ sale.customer_phone or ''|e }}', '{{ sale.customer_email or ''|e }}', '{{ sale.product_description or ''|e }}', {{ sale.quantity }}, {{ sale.unit_price }}, {{ sale.total_amount }}, '{{ sale.payment_method|e }}', '{{ sale.sale_date.strftime('%d.%m.%Y %H:%M') }}', '{{ sale.notes or ''|e }}', '{{ sale.creator.first_name }} {{ sale.creator.last_name }}')" title="Detayları Gör"
+                            style="background-color: #000; border-color: #000; color: #fff; padding: 0.5rem 0.75rem; font-weight: 600;">
+                      GÖRÜNTÜLE
+                    </button>
+                    <form method="POST" action="{{ url_for('admin.delete_manual_sale', sale_id=sale.id) }}" 
+                          style="display: inline;" 
+                          onsubmit="return confirm('Bu satış kaydını silmek istediğinizden emin misiniz?')">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="btn btn-sm" title="Sil"
+                              style="background-color: transparent; border-color: #000; color: #000; padding: 0.5rem 0.75rem; font-weight: 600;">
+                        SİL
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if manual_sales.pages > 1 %}
+        <nav aria-label="Satışlar sayfalama">
+          <ul class="pagination justify-content-center">
+            {% if manual_sales.has_prev %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.sales_history', page=manual_sales.prev_num) }}">Önceki</a>
+              </li>
+            {% endif %}
+            
+            {% for page_num in manual_sales.iter_pages() %}
+              {% if page_num %}
+                {% if page_num != manual_sales.page %}
+                  <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.sales_history', page=page_num) }}">{{ page_num }}</a>
+                  </li>
+                {% else %}
+                  <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                  </li>
+                {% endif %}
+              {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link">…</span>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if manual_sales.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('admin.sales_history', page=manual_sales.next_num) }}">Sonraki</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+
+      {% else %}
+        <div class="text-center py-5">
+          <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+          <h5 class="text-muted">Henüz manuel satış kaydı bulunmuyor</h5>
+          <p class="text-muted">İlk manuel satışınızı eklemek için "Yeni Satış" butonuna tıklayın.</p>
+          <a href="{{ url_for('admin.manual_sale') }}" class="admin-btn admin-btn-primary">
+            <i class="fas fa-plus"></i> İLK SATIŞI EKLE
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Satış Detayları Modal -->
+<div id="saleDetailModal" class="modal" style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);overflow-y:auto;">
+  <div class="modal-content" style="background-color:#fefefe;margin:2% auto;padding:20px;border:1px solid #888;width:90%;max-width:800px;border-radius:8px;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h2>Satış Detayları</h2>
+      <span class="close" onclick="closeSaleDetailModal()" style="color:#aaa;font-size:28px;font-weight:bold;cursor:pointer;">&times;</span>
+    </div>
+    <div id="saleDetailContent">
+      <!-- Detaylar JavaScript ile doldurulacak -->
+    </div>
+  </div>
+</div>
+
+<script>
+function showSaleDetails(saleId, productName, customerName, customerTc, customerPhone, customerEmail, productDescription, quantity, unitPrice, totalAmount, paymentMethod, saleDate, notes, creatorName) {
+  // Modal'ı aç
+  document.getElementById('saleDetailModal').style.display = 'block';
+  
+  // Detayları göster
+  document.getElementById('saleDetailContent').innerHTML = `
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+      <!-- Ürün Bilgileri -->
+      <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; background: #fff;">
+        <h4 style="color: #333; margin-bottom: 1rem; font-weight: 600;">Ürün Bilgileri</h4>
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">Ürün Adı:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${productName}</div>
+        </div>
+        ${productDescription ? `
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">Açıklama:</strong>
+          <div style="margin-top: 0.25rem; color: #666;">${productDescription}</div>
+        </div>
+        ` : ''}
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">Adet:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${quantity}</div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">Birim Fiyat:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">₺${parseFloat(unitPrice).toFixed(2)}</div>
+        </div>
+        <div>
+          <strong style="color: #555;">Toplam Tutar:</strong>
+          <div style="margin-top: 0.25rem; color: #28a745; font-weight: 600; font-size: 1.2em;">₺${parseFloat(totalAmount).toFixed(2)}</div>
+        </div>
+      </div>
+      
+      <!-- Müşteri Bilgileri -->
+      <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; background: #fff;">
+        <h4 style="color: #333; margin-bottom: 1rem; font-weight: 600;">Müşteri Bilgileri</h4>
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">Müşteri Adı:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${customerName}</div>
+        </div>
+        ${customerTc ? `
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">TC Kimlik No:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${customerTc}</div>
+        </div>
+        ` : ''}
+        ${customerPhone ? `
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">Telefon:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${customerPhone}</div>
+        </div>
+        ` : ''}
+        ${customerEmail ? `
+        <div style="margin-bottom: 1rem;">
+          <strong style="color: #555;">E-posta:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${customerEmail}</div>
+        </div>
+        ` : ''}
+        <div>
+          <strong style="color: #555;">Ödeme Yöntemi:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${paymentMethod}</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Satış Bilgileri -->
+    <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; background: #fff; margin-bottom: 2rem;">
+      <h4 style="color: #333; margin-bottom: 1rem; font-weight: 600;">Satış Bilgileri</h4>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div>
+          <strong style="color: #555;">Satış Tarihi:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${saleDate}</div>
+        </div>
+        <div>
+          <strong style="color: #555;">Kaydeden:</strong>
+          <div style="margin-top: 0.25rem; color: #333; font-weight: 500;">${creatorName}</div>
+        </div>
+      </div>
+      ${notes ? `
+      <div style="margin-top: 1rem;">
+        <strong style="color: #555;">Notlar:</strong>
+        <div style="margin-top: 0.25rem; color: #666; line-height: 1.5;">${notes}</div>
+      </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function closeSaleDetailModal() {
+  document.getElementById('saleDetailModal').style.display = 'none';
+}
+
+// Modal dışına tıklandığında kapat
+window.onclick = function(event) {
+  const modal = document.getElementById('saleDetailModal');
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+}
+</script>
+{% endblock %}

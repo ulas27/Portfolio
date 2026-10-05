@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block title %}Kategori Düzenle - Admin{% endblock %}
+{% block content %}
+<section class="container" style="padding: 2rem 0;">
+    <div class="admin-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Kategori Düzenle</h1>
+        <a href="{{ url_for('admin.categories') }}" class="btn btn-secondary">
+            ← Geri Dön
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data" class="category-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <!-- Temel Bilgiler -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Kategori Bilgileri</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Kategori Adı <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required 
+                                   value="{{ category.name }}" placeholder="Örn: Yüzükler, Kolyeler, Küpeler...">
+                            <small class="form-text text-muted">
+                                URL slug'ı: <strong>{{ category.slug }}</strong>
+                            </small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="description" class="form-label">Açıklama</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" 
+                                      placeholder="Kategori hakkında kısa açıklama...">{{ category.description or '' }}</textarea>
+                            <small class="form-text text-muted">
+                                Bu açıklama kategori sayfasında gösterilecektir.
+                            </small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="sort_order" class="form-label">Sıralama</label>
+                                    <input type="number" class="form-control" id="sort_order" name="sort_order" 
+                                           value="{{ category.sort_order }}" min="0" max="999">
+                                    <small class="form-text text-muted">
+                                        Düşük sayılar önce gösterilir (0 = en üstte)
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Durum</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+                                               {% if category.is_active %}checked{% endif %}>
+                                        <label class="form-check-label" for="is_active">
+                                            <strong>Aktif</strong> (Sitede göster)
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Pasif kategoriler sitede görünmez
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kategori Resmi -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Kategori Resmi</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if category.image %}
+                        <div class="current-image mb-3">
+                            <label class="form-label">Mevcut Resim:</label>
+                            <div class="image-preview-container">
+                                <img src="{{ url_for('static', filename='uploads/categories/' + category.image) }}" 
+                                     alt="{{ category.name }}" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                                <div class="mt-2">
+                                    <small class="text-muted">{{ category.image }}</small>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeCategoryImage()">
+                                            <i class="fas fa-trash"></i> Resmi Kaldır
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="remove_image" name="remove_image" value="false">
+                        </div>
+                        {% endif %}
+                        
+                        <div class="form-group mb-3">
+                            <label for="image" class="form-label">
+                                {% if category.image %}Yeni Resim Seç{% else %}Resim Seç{% endif %}
+                            </label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <small class="form-text text-muted">
+                                Önerilen boyut: 400x300 piksel. Desteklenen formatlar: JPG, PNG, GIF, WebP
+                                {% if category.image %}<br>Yeni resim seçerseniz mevcut resim değiştirilecektir.{% endif %}
+                            </small>
+                        </div>
+                        
+                        <div id="imagePreview" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <!-- Form Butonları -->
+                <div class="form-actions" style="border-top: 1px solid #eee; padding-top: 2rem; margin-top: 2rem;">
+                    <button type="submit" class="admin-btn admin-btn-primary">
+                        DEĞİŞİKLİKLERİ KAYDET
+                    </button>
+                    <a href="{{ url_for('admin.categories') }}" class="admin-btn admin-btn-secondary ms-2">
+                        İPTAL
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Yardım Paneli -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">💡 İpuçları</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            ✅ <strong>Kategori Adı:</strong> Kısa ve açıklayıcı olsun
+                        </li>
+                        <li class="mb-2">
+                            ✅ <strong>Sıralama:</strong> Ana kategoriler için düşük sayılar kullanın
+                        </li>
+                        <li class="mb-2">
+                            ✅ <strong>Resim:</strong> Kategoriyi temsil eden kaliteli görsel seçin
+                        </li>
+                        <li class="mb-0">
+                            ✅ <strong>Açıklama:</strong> SEO için faydalı, müşteriler için bilgilendirici
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0">ℹ️ Kategori İstatistikleri</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <strong>Ürün Sayısı:</strong> {{ category.products|length }} ürün
+                        </li>
+                        <li class="mb-2">
+                            <strong>Oluşturulma:</strong> {{ category.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </li>
+                        <li class="mb-0">
+                            <strong>URL Slug:</strong> {{ category.slug }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.card {
+    border: 1px solid #e3e6f0;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+    padding: 0.75rem 1.25rem;
+}
+.form-label {
+    font-weight: 600;
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+.text-danger {
+    color: #e74a3b !important;
+}
+.text-success {
+    color: #28a745 !important;
+}
+.form-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+#imagePreview {
+    text-align: center;
+}
+.image-preview-container {
+    display: inline-block;
+    position: relative;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #f8f9fa;
+}
+.image-preview-container img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 4px;
+}
+</style>
+
+<script>
+// Resim önizleme
+document.getElementById('image').addEventListener('change', function(e) {
+    const preview = document.getElementById('imagePreview');
+    const file = e.target.files[0];
+    
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <div class="image-preview-container">
+                    <img src="${e.target.result}" alt="Kategori resmi önizleme">
+                    <div class="mt-2">
+                        <small class="text-muted">Yeni resim önizleme</small>
+                    </div>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = '';
+    }
+});
+
+// Kategori resmini kaldırma
+function removeCategoryImage() {
+    if (confirm('Bu kategori resmini kaldırmak istediğinizden emin misiniz?')) {
+        document.getElementById('remove_image').value = 'true';
+        document.querySelector('.current-image').style.display = 'none';
+        document.querySelector('label[for="image"]').innerHTML = 'Resim Seç';
+        document.querySelector('small.form-text').innerHTML = 'Önerilen boyut: 400x300 piksel. Desteklenen formatlar: JPG, PNG, GIF, WebP';
+    }
+}
+</script>
+{% endblock %}

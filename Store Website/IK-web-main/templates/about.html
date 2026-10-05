@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Hakkımızda - İnci Gold{% endblock %}
+{% block content %}
+    <section class="container" style="padding:2rem 0;">
+      <h1>Hakkımızda</h1>
+      <p>5 yıldır Gaziantep'te kuyumculuk sektöründe hizmet veren İnci Gold, geleneksel el işçiliği ile modern tasarımı buluşturur.</p>
+      
+      <div class="about-content" style="margin: 4rem 0;">
+        <div class="about-text">
+          <h2>Neden Bizi Seçmelisiniz?</h2>
+          <p>5 yıldır Gaziantep'te kuyumculuk sektöründe hizmet veren İnci Gold, geleneksel el işçiliği ile modern tasarımı buluşturuyor. Her mücevher, uzman kuyumcularımızın titiz çalışması ve kalite standartlarımızın bir yansımasıdır.</p>
+          
+        </div>
+      </div>
+    </section>
+
+<!-- Stats Section -->
+<section class="stats-section" style="padding: 4rem 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item scroll-animate delay-2">
+                <div class="stat-number">5+</div>
+                <div class="stat-label">Tecrübe</div>
+            </div>
+            <div class="stat-item scroll-animate delay-3">
+                <div class="stat-number">2500+</div>
+                <div class="stat-label">Mutlu Müşteri</div>
+            </div>
+            <div class="stat-item scroll-animate delay-4">
+                <div class="stat-number">%100</div>
+                <div class="stat-label">Memnuniyet</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section" id="faq-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Sıkça Sorulan Sorular</h2>
+            <p class="section-subtitle">Müşterilerimizin en çok merak ettiği konular</p>
+        </div>
+        
+        <div class="faq-grid">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Ürünlerinizde kalite garantisi var mı?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Evet, tüm ürünlerimizde 2 yıl kalite garantisi bulunmaktadır. Ayrıca tüm mücevherlerimiz sertifikalıdır.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Kargo süresi ne kadar?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>İstanbul içi 1 gün, Türkiye geneli 2-3 iş günü içinde teslimat yapılmaktadır. 500 TL üzeri siparişlerde ücretsiz kargo.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Özel tasarım yapıyor musunuz?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Evet, hayalinizdeki mücevheri birlikte tasarlayabiliriz. Özel tasarım süreci 2-4 hafta arasında tamamlanır.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>İade ve değişim politikası nedir?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>14 gün içinde koşulsuz iade hakkınız bulunmaktadır. Ürün orijinal ambalajında ve etiketli olmalıdır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // FAQ functionality
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', function() {
+            const faqItem = this.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
